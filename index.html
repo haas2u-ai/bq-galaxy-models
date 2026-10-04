@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Metric-inflow galaxy models — interactive 3D (E.P.J. de Haas)</title>
-<meta name="description" content="Interactive 3D models of the constant-Lagrangian metric-inflow galaxy model and Painlevé–Gullstrand jets: a spiral galaxy with polar jets, the Hubble sequence from cone occupation, and the M87 jet.">
+<title>Galaxies and jets as flows of space — videos and interactive models (E.P.J. de Haas)</title>
+<meta name="description" content="Videos and interactive 3D models of the constant-Lagrangian metric-inflow galaxy model and Painlevé–Gullstrand jets by E.P.J. de Haas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
@@ -13,50 +13,74 @@
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
   --bg:#05070d; --surface:#0d1220; --edge:#222c42; --ink:#e7ebf3; --soft:#97a2b9;
-  --amber:#f2a24a; --cyan:#48dbfb; --violet:#a29bfe; --gold:#feca57;
+  --amber:#f2a24a; --cyan:#48dbfb;
   --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --serif:"Source Serif 4","STIX Two Text",Georgia,"Times New Roman",serif;
 }
 @media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]){ --bg:#f5f6fa; --surface:#ffffff; --edge:#d6dce8; --ink:#141a28; --soft:#55607a;
-    --amber:#b8620f; --cyan:#0f7fb0; --violet:#5b4fd6; --gold:#9a6a00; }
+  :root:not([data-theme="dark"]){ --bg:#f5f6fa; --surface:#ffffff; --edge:#d6dce8; --ink:#141a28; --soft:#55607a; --amber:#b8620f; --cyan:#0f7fb0; }
 }
-:root[data-theme="dark"]{ --bg:#05070d; --surface:#0d1220; --edge:#222c42; --ink:#e7ebf3; --soft:#97a2b9; --amber:#f2a24a; --cyan:#48dbfb; --violet:#a29bfe; --gold:#feca57; }
-:root[data-theme="light"]{ --bg:#f5f6fa; --surface:#ffffff; --edge:#d6dce8; --ink:#141a28; --soft:#55607a; --amber:#b8620f; --cyan:#0f7fb0; --violet:#5b4fd6; --gold:#9a6a00; }
+:root[data-theme="dark"]{ --bg:#05070d; --surface:#0d1220; --edge:#222c42; --ink:#e7ebf3; --soft:#97a2b9; --amber:#f2a24a; --cyan:#48dbfb; }
+:root[data-theme="light"]{ --bg:#f5f6fa; --surface:#ffffff; --edge:#d6dce8; --ink:#141a28; --soft:#55607a; --amber:#b8620f; --cyan:#0f7fb0; }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
-main{max-width:1120px;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(18px,4vw,40px) 48px}
-header{max-width:760px;margin-bottom:clamp(32px,5vw,56px)}
+main{max-width:1160px;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(18px,4vw,40px) 48px}
+header{max-width:780px}
 .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin:0 0 14px}
-h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.6vw,50px);line-height:1.08;letter-spacing:-.015em;margin:0 0 18px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5vw,54px);line-height:1.06;letter-spacing:-.015em;margin:0 0 18px}
 .lede{font-size:clamp(16px,1.6vw,18.5px);color:var(--soft);margin:0}
 .lede em{font-family:var(--serif);font-style:italic;color:var(--ink)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
-.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--edge);border-radius:12px;overflow:hidden;
-  color:inherit;text-decoration:none;transition:border-color .2s, transform .2s}
-.card:hover{border-color:var(--soft);transform:translateY(-2px)}
-.card:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.art{display:block;width:100%;height:auto;aspect-ratio:16/10;background:#03050b}
-.body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
-.card h2{font-family:var(--serif);font-weight:600;font-size:23px;line-height:1.2;margin:0}
-.card p{margin:0;color:var(--soft);font-size:15px}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
-.tags span{font-size:12.5px;border:1px solid var(--edge);border-radius:999px;padding:2px 9px;color:var(--soft)}
-.open{margin-top:auto;padding-top:8px;font-weight:500;font-size:15px;color:var(--cyan)}
-.open::after{content:" →"}
-section.about{margin-top:clamp(40px,6vw,64px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
-  border-top:1px solid var(--edge);padding-top:32px}
-.about h3{font-family:var(--serif);font-weight:600;font-size:20px;margin:0 0 10px}
-.about p,.about li{color:var(--soft);font-size:15px}
-.about p{margin:0 0 12px}
-.about ul{margin:0;padding-left:18px}
-.about li{margin:0 0 8px}
-.about a{color:var(--cyan)}
-footer{margin-top:40px;font-size:13px;color:var(--soft)}
-footer a{color:var(--soft)}
-@media (max-width: 760px){ section.about{grid-template-columns:1fr} }
-@media (prefers-reduced-motion: reduce){ .card{transition:none} .card:hover{transform:none} }
+
+/* models feature */
+.feature{margin:clamp(32px,5vw,52px) 0 clamp(40px,6vw,64px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
+  align-items:center;gap:clamp(20px,4vw,48px);background:var(--surface);border:1px solid var(--edge);border-radius:14px;overflow:hidden}
+.feature svg{display:block;width:100%;height:100%;min-height:240px;background:#03050b}
+.feature .txt{padding:clamp(22px,3vw,36px) clamp(22px,3vw,36px) clamp(22px,3vw,36px) 0}
+.feature h2{font-family:var(--serif);font-weight:600;font-size:clamp(24px,2.6vw,32px);line-height:1.15;margin:0 0 10px}
+.feature p{color:var(--soft);margin:0 0 16px}
+.feature ul{margin:0 0 20px;padding-left:18px;color:var(--soft)}
+.feature li{margin-bottom:4px}
+.btn{display:inline-block;background:var(--cyan);color:#03141c;font-weight:500;text-decoration:none;border-radius:8px;padding:10px 18px}
+.btn:hover{filter:brightness(1.08)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* videos */
+.sechead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.sechead h2{font-family:var(--serif);font-weight:600;font-size:clamp(24px,2.6vw,32px);margin:0}
+.sechead p{margin:0;color:var(--soft);font-size:14.5px}
+.sechead p a{color:var(--cyan)}
+.group{margin-bottom:34px}.gh{font-family:var(--serif);font-weight:600;font-size:21px;margin:0 0 4px}.gp{color:var(--soft);font-size:14.5px;margin:0 0 14px}
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;list-style:none;margin:0;padding:0}
+.vid{background:var(--surface);border:1px solid var(--edge);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.frame{position:relative;aspect-ratio:16/9;background:#03050b}
+.frame button{all:unset;position:absolute;inset:0;cursor:pointer;display:block}
+.frame img{width:100%;height:100%;object-fit:cover;display:block}
+.frame .play{position:absolute;left:50%;top:50%;width:62px;height:44px;transform:translate(-50%,-50%);border-radius:12px;
+  background:rgba(3,5,11,.72);display:grid;place-items:center;transition:background .2s}
+.frame .play::before{content:"";border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff;margin-left:4px}
+.frame button:hover .play,.frame button:focus-visible .play{background:#e6302f}
+.frame button:focus-visible{outline:3px solid var(--cyan);outline-offset:-3px}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vmeta{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.vmeta p.d{margin:0;color:var(--soft);font-size:13.5px;line-height:1.45}
+.vmeta h3{font-size:15.5px;font-weight:500;line-height:1.35;margin:0}
+.vmeta a{font-size:13.5px;color:var(--cyan);text-decoration:none;margin-top:auto}
+.vmeta a:hover{text-decoration:underline}
+.num{font-variant-numeric:tabular-nums;color:var(--soft);font-size:12.5px}
+
+footer{margin-top:clamp(40px,6vw,64px);border-top:1px solid var(--edge);padding-top:24px;font-size:13.5px;color:var(--soft);
+  display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px}
+footer a{color:var(--cyan)}
+footer ul{margin:6px 0 0;padding-left:18px}
+footer li{margin-bottom:4px}
+@media (max-width: 760px){
+  .feature{grid-template-columns:1fr}
+  .feature .txt{padding:0 22px 24px}
+  .feature svg{min-height:200px}
+  footer{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){ .frame .play{transition:none} }
 </style>
 </head>
 <body>
@@ -64,105 +88,132 @@ footer a{color:var(--soft)}
   <header>
     <p class="kicker">E.P.J. de Haas · Kandinsky College, Nijmegen</p>
     <h1>Galaxies and jets as flows of space</h1>
-    <p class="lede">Three interactive 3D models of the <em>constant-Lagrangian metric-inflow</em> galaxy model and the three-rapidity <em>Painlevé–Gullstrand</em> jet geometry. Each runs the model equations live in your browser — drag to rotate, scroll or pinch to zoom, and change the parameters.</p>
+    <p class="lede">Animations and interactive 3D models of the <em>constant-Lagrangian metric-inflow</em> galaxy model and the three-rapidity <em>Painlevé–Gullstrand</em> jet geometry — from rotation-curve fits and the Hubble sequence to the jet of M 87.</p>
   </header>
 
-  <div class="grid">
-    <a class="card" href="galaxy_pg_jets_interactive.html">
-      <svg class="art" viewBox="0 0 320 200" role="img" aria-label="A spiral galaxy seen at an angle with two narrow helical jets along its axis">
-        <rect width="320" height="200" fill="#03050b"/>
-        <g transform="translate(160 104)">
-          <ellipse rx="118" ry="34" fill="none" stroke="#f2a24a" stroke-opacity=".18"/>
-          <path d="M-6 2 C 30 -16, 70 -10, 96 6 C 112 16, 104 28, 70 30" fill="none" stroke="#ffb86b" stroke-width="2.2" stroke-linecap="round"/>
-          <path d="M6 -2 C -30 16, -70 10, -96 -6 C -112 -16, -104 -28, -70 -30" fill="none" stroke="#ffb86b" stroke-width="2.2" stroke-linecap="round"/>
-          <circle r="11" fill="#fff0cf" fill-opacity=".85"/>
-          <path d="M0 -12 C 8 -26,-8 -40,0 -54 C 8 -68,-8 -82,0 -96" fill="none" stroke="#7fd6ff" stroke-width="1.8"/>
-          <path d="M0 -12 C -8 -26,8 -40,0 -54 C -8 -68,8 -82,0 -96" fill="none" stroke="#a29bfe" stroke-width="1.8"/>
-          <path d="M0 12 C 8 26,-8 40,0 54 C 8 68,-8 82,0 96" fill="none" stroke="#7fd6ff" stroke-width="1.8" stroke-opacity=".5"/>
-          <path d="M0 12 C -8 26,8 40,0 54 C -8 68,8 82,0 96" fill="none" stroke="#a29bfe" stroke-width="1.8" stroke-opacity=".5"/>
-        </g>
-      </svg>
-      <div class="body">
-        <h2>Spiral galaxy with polar jets</h2>
-        <p>A metric-inflow disk whose arms are streamlines of the flow, fed by broad inflow cones, with surplus inflow redirected into narrow double-helix jets.</p>
-        <div class="tags"><span>bulge mass, radius, redshift</span><span>jet cone & helix pitch</span><span>surplus fraction</span></div>
-        <span class="open">Open the model</span>
-      </div>
-    </a>
-
-    <a class="card" href="hubble_sequence_interactive.html">
-      <svg class="art" viewBox="0 0 320 200" role="img" aria-label="The Hubble tuning fork: elliptical, lenticular, and spiral and barred-spiral branches">
-        <rect width="320" height="200" fill="#03050b"/>
-        <path d="M40 100 H150 L200 64 H290 M150 100 L200 136 H290" fill="none" stroke="#97a2b9" stroke-opacity=".55" stroke-width="1.5"/>
-        <ellipse cx="40" cy="100" rx="17" ry="17" fill="#f2a24a" fill-opacity=".55"/>
-        <ellipse cx="95" cy="100" rx="18" ry="11" fill="#f2a24a" fill-opacity=".55"/>
-        <ellipse cx="150" cy="100" rx="20" ry="6" fill="#f2a24a" fill-opacity=".6"/>
-        <g fill="none" stroke="#ffb86b" stroke-width="1.6">
-          <path d="M200 64 m-2 0 a6 3 0 1 1 8 1 a11 5 0 1 1 -20 -1"/>
-          <path d="M245 64 m-2 0 a8 4 0 1 1 10 1 a15 7 0 1 1 -26 -1"/>
-          <path d="M290 64 m-2 0 a10 5 0 1 1 14 1 a19 9 0 1 1 -32 -1"/>
-          <path d="M200 136 m-6 0 h12 m-6 0 a10 4 0 1 1 -12 2"/>
-          <path d="M245 136 m-8 0 h16 m-8 0 a14 6 0 1 1 -16 2"/>
-          <path d="M290 136 m-10 0 h20 m-10 0 a18 8 0 1 1 -20 2"/>
-        </g>
-        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11" fill="#c9d1e0" text-anchor="middle">
-          <text x="40" y="132">E0</text><text x="95" y="132">E5</text><text x="150" y="124">S0</text>
-          <text x="200" y="44">Sa</text><text x="245" y="44">Sb</text><text x="290" y="44">Sc</text>
-          <text x="200" y="166">SBa</text><text x="245" y="166">SBb</text><text x="290" y="166">SBc</text>
-        </g>
-      </svg>
-      <div class="body">
-        <h2>The Hubble sequence from cone occupation</h2>
-        <p>Every tracer stays on its cone θ₀. How the flow occupies the cones turns one model into ellipticals, lenticulars, spirals and barred spirals; arms open as bulge mass and radius grow.</p>
-        <div class="tags"><span>clickable tuning fork</span><span>morphing tour</span><span>two-Lagrangian bars</span></div>
-        <span class="open">Open the model</span>
-      </div>
-    </a>
-
-    <a class="card" href="m87_pg_jet_interactive.html">
-      <svg class="art" viewBox="0 0 320 200" role="img" aria-label="The M87 jet: a black hole with a photon ring, stagnation rings, and a tightening helix on a narrow cone">
-        <rect width="320" height="200" fill="#03050b"/>
-        <g transform="translate(160 150)">
-          <line x1="0" y1="0" x2="-110" y2="-40" stroke="#f2a24a" stroke-opacity=".45"/>
-          <line x1="0" y1="0" x2="110" y2="-40" stroke="#f2a24a" stroke-opacity=".45"/>
-          <circle r="7" fill="#000" stroke="#ffffff" stroke-opacity=".8" stroke-dasharray="3 2"/>
-          <ellipse cy="-20" rx="9" ry="3" fill="none" stroke="#feca57" stroke-width="1.8"/>
-          <path d="M-9 -22 C -9 -26, 9 -26, 9 -28 C 9 -31,-10 -31,-10 -34 C -10 -38, 11 -38, 11 -42 C 11 -48,-13 -48,-13 -54 C -13 -62, 16 -62, 16 -70 C 16 -82,-20 -82,-20 -94 C -20 -110, 25 -110, 25 -126"
-                fill="none" stroke="#c7ecff" stroke-width="1.6"/>
-          <line x1="-6" y1="-20" x2="-28" y2="-132" stroke="#48dbfb" stroke-opacity=".35"/>
-          <line x1="6" y1="-20" x2="28" y2="-132" stroke="#48dbfb" stroke-opacity=".35"/>
-          <ellipse cy="-112" rx="24" ry="5" fill="none" stroke="#ff9ff3" stroke-width="1.6"/>
-        </g>
-      </svg>
-      <div class="body">
-        <h2>The M 87 jet in a single PG geometry</h2>
-        <p>Zoom across seven decades in radius: inflow on broad cones, a stagnation surface at r₀ where the helix winds tight and reverses, and the outward helix on the 6° jet cone out to HST-1 and kiloparsecs.</p>
-        <div class="tags"><span>log-radius zoom</span><span>θ₀, r₀, ε∞</span><span>guided tour</span></div>
-        <span class="open">Open the model</span>
-      </div>
-    </a>
-  </div>
-
-  <section class="about">
-    <div>
-      <h3>About these models</h3>
-      <p>The galaxy models use the constant-Lagrangian metric-inflow picture: the bulge sets an inflow of space whose orbital and radial channels add up to a constant v<sub>L</sub>², and spiral arms are streamlines of that flow. The jet models use the three-rapidity Painlevé–Gullstrand metric, in which flow lines lie on cones of fixed polar angle.</p>
-      <p>Each model separates what is imposed by observation, calibrated, derived from the geometry, or interpretive, and states its display conventions (for example, jet cones drawn wider than their true angle so the helices are visible).</p>
+  <section class="feature" aria-labelledby="models-h">
+    <svg viewBox="0 0 400 260" role="img" aria-label="A spiral galaxy with two helical polar jets">
+      <rect width="400" height="260" fill="#03050b"/>
+      <g transform="translate(200 134)">
+        <ellipse rx="150" ry="42" fill="none" stroke="#f2a24a" stroke-opacity=".18"/>
+        <ellipse rx="96" ry="27" fill="none" stroke="#f2a24a" stroke-opacity=".12"/>
+        <path d="M-8 3 C 38 -20, 90 -13, 122 8 C 142 21, 132 36, 88 38" fill="none" stroke="#ffb86b" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M8 -3 C -38 20, -90 13, -122 -8 C -142 -21, -132 -36, -88 -38" fill="none" stroke="#ffb86b" stroke-width="2.6" stroke-linecap="round"/>
+        <circle r="13" fill="#fff0cf" fill-opacity=".88"/>
+        <path d="M0 -15 C 10 -32,-10 -49,0 -66 C 10 -83,-10 -100,0 -117" fill="none" stroke="#7fd6ff" stroke-width="2"/>
+        <path d="M0 -15 C -10 -32,10 -49,0 -66 C -10 -83,10 -100,0 -117" fill="none" stroke="#a29bfe" stroke-width="2"/>
+        <path d="M0 15 C 10 32,-10 49,0 66 C 10 83,-10 100,0 117" fill="none" stroke="#7fd6ff" stroke-width="2" stroke-opacity=".5"/>
+        <path d="M0 15 C -10 32,10 49,0 66 C -10 83,10 100,0 117" fill="none" stroke="#a29bfe" stroke-width="2" stroke-opacity=".5"/>
+      </g>
+    </svg>
+    <div class="txt">
+      <h2 id="models-h">Interactive models</h2>
+      <p>Each model runs the equations live in your browser. Drag to rotate, scroll or pinch to zoom, and change the parameters yourself.</p>
+      <ul>
+        <li>Spiral galaxy with polar jets</li>
+        <li>The Hubble sequence from cone occupation</li>
+        <li>The M 87 jet in a single PG geometry</li>
+        <li>The riverbed of space</li>
+      </ul>
+      <a class="btn" href="models.html">Open the models</a>
     </div>
+  </section>
+
+  <section aria-labelledby="videos-h">
+    <div class="sechead">
+      <h2 id="videos-h">Videos</h2>
+      <p>Click a video to play it here, or open it on YouTube. Every frame is computed from the model equations — <a href="https://github.com/haas2u-ai/bq-galaxy-models/tree/main/bq-video-scripts">get the Python scripts</a>.</p>
+    </div>
+    <div class="group" id="g-model"><h3 class="gh">The galaxy model</h3><p class="gp">How space flows through a galaxy, and how a constant-Lagrangian inflow shapes spiral arms, nested spirals and the Hubble sequence.</p><ul class="vids"></ul></div>
+    <div class="group" id="g-fit"><h3 class="gh">Fitting real rotation curves</h3><p class="gp">Step-by-step fits to SPARC data: one Lagrangian, two Lagrangians, and a constant offset.</p><ul class="vids"></ul></div>
+    <div class="group" id="g-jet"><h3 class="gh">Jets</h3><p class="gp">Painlevé–Gullstrand cone flows: polar jets in 3D and the jet of M 87.</p><ul class="vids"></ul></div>
+    <div class="group" id="g-other" hidden><h3 class="gh">More videos</h3><ul class="vids"></ul></div>
+  </section>
+
+  <footer>
     <div>
-      <h3>Papers</h3>
+      <strong style="color:var(--ink)">Papers</strong>
       <ul>
         <li>E.P.J. de Haas, <i>J. High Energy Phys. Gravit. Cosmol.</i> 11 (2025), <a href="https://doi.org/10.4236/jhepgc.2025.114097">doi:10.4236/jhepgc.2025.114097</a></li>
         <li>E.P.J. de Haas, <i>J. High Energy Phys. Gravit. Cosmol.</i> 12 (2026), <a href="https://doi.org/10.4236/jhepgc.2026.121022">doi:10.4236/jhepgc.2026.121022</a></li>
         <li>E.P.J. de Haas (2025), Jet collimation, helical geometry and UHECR acceleration from a single PG metric, <a href="https://doi.org/10.5281/zenodo.17681340">doi:10.5281/zenodo.17681340</a></li>
-        <li>Observational context for M 87: K. Hada et al., <i>Astron. Astrophys. Rev.</i> 32, 5 (2024), <a href="https://doi.org/10.1007/s00159-024-00155-y">doi:10.1007/s00159-024-00155-y</a></li>
       </ul>
     </div>
-  </section>
-
-  <footer>
-    The models are single self-contained HTML files and also run offline. Source: <a href="https://github.com/haas2u-ai/bq-galaxy-models">github.com/haas2u-ai/bq-galaxy-models</a> · Rendering with three.js (MIT License).
+    <div>
+      <strong style="color:var(--ink)">Links</strong>
+      <ul>
+        <li><a href="models.html">Interactive models</a></li>
+        <li><a href="https://github.com/haas2u-ai/bq-galaxy-models/tree/main/bq-video-scripts">Python scripts for the videos</a> (MIT licence)</li>
+        <li><a href="https://github.com/haas2u-ai/bq-galaxy-models">Source on GitHub</a></li>
+      </ul>
+    </div>
   </footer>
 </main>
+
+<script>
+(function(){
+  "use strict";
+  var IDS = ["wQsIR_QUinI","hioiEtpbkh4","LVA3DLV9UHA","ZdEY_My_xRw","oSV22W_Qx10",
+             "u4-MHf3DOBA","AVS9xDFGQgc","oLzBnNbNgcw","cs9dfZt9DWs","AaKJKJkoxzc",
+             "k1vrjk239xw"];
+  // Known videos: [match in YouTube title, group, order, short description]
+  var KNOWN = [
+    [/how space flows/i,     "g-model", 0, "The riverbed of space: random cell creation gives Hubble’s law, absorption in matter a slow replacement drift, and the riverbed carries matter into CL spirals with a limit circle."],
+    [/galactic disk model/i, "g-model", 1, "A metric-inflow spiral across cosmic time: how the arms change as the bulge grows and the Hubble rate falls."],
+    [/double lagrangian/i,   "g-model", 2, "Two flow regimes in one galaxy: a nested inner spiral, a ring at the reset radius, and the outer disk spiral."],
+    [/bulge reset/i,         "g-model", 3, "How an inner spiral and a ring form when the bulge–bar system becomes a new bulge."],
+    [/hubble sequence/i,     "g-model", 4, "Ellipticals, lenticulars, spirals and barred spirals from how the flow occupies its cones."],
+    [/UGC\s*8286/i,          "g-fit",   1, "A single-Lagrangian fit, step by step: data in v², the χ² landscape, Levenberg–Marquardt, and the result."],
+    [/IC\s*2574/i,           "g-fit",   2, "When one Lagrangian is not enough: the reset at R₂, a staircase χ² profile, and two near-equal solutions."],
+    [/ESO\s*079/i,           "g-fit",   3, "When does an extra parameter earn its place? A constant offset Φ_BH tested with χ², AIC and BIC."],
+    [/face-on to edge-on/i,  "g-jet",   2, "A 180° sweep with slow motion edge-on, showing the X of the two broad inflow cones."],
+    [/polar jets/i,          "g-jet",   1, "A metric-inflow disk with bipolar double-helix jets on narrow PG cones, in 3D."],
+    [/M\s*87/i,              "g-jet",   3, "From kiloparsecs to the stagnation surface near the black hole and back out along the 6° jet."]
+  ];
+  function classify(title){
+    for (var k = 0; k < KNOWN.length; k++) if (KNOWN[k][0].test(title)) return KNOWN[k];
+    return null;
+  }
+  function card(id, title, desc){
+    var watch = "https://youtu.be/" + id, li = document.createElement("li"); li.className = "vid";
+    li.innerHTML =
+      '<div class="frame"><button type="button"><img loading="lazy" alt="" onerror="this.style.visibility=\'hidden\'" src="https://i.ytimg.com/vi/' + id + '/hqdefault.jpg">' +
+      '<span class="play" aria-hidden="true"></span></button></div>' +
+      '<div class="vmeta"><h3></h3><p class="d"></p><a href="' + watch + '" target="_blank" rel="noopener">Watch on YouTube ↗</a></div>';
+    var h3 = li.querySelector("h3"), btn = li.querySelector("button"), d = li.querySelector("p.d");
+    if (title) { h3.textContent = title; btn.setAttribute("aria-label", "Play: " + title); } else { h3.hidden = true; btn.setAttribute("aria-label", "Play video"); }
+    if (desc) d.textContent = desc; else d.hidden = true;
+    btn.addEventListener("click", function(){
+      var f = document.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0";
+      f.title = title || "YouTube video"; f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen = true;
+      btn.replaceWith(f);
+    });
+    return li;
+  }
+  function getTitle(id){
+    return fetch("https://www.youtube.com/oembed?format=json&url=" + encodeURIComponent("https://www.youtube.com/watch?v=" + id))
+      .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+      .then(function(j){ return j.title; })
+      .catch(function(){ return null; });
+  }
+  Promise.all(IDS.map(getTitle)).then(function(titles){
+    var placed = { "g-model": [], "g-fit": [], "g-jet": [], "g-other": [] };
+    IDS.forEach(function(id, i){
+      var t = titles[i], k = t ? classify(t) : null;
+      if (k) placed[k[1]].push({ order: k[2], el: card(id, t, k[3]) });
+      else placed["g-other"].push({ order: i, el: card(id, t, "") });
+    });
+    Object.keys(placed).forEach(function(g){
+      var box = document.getElementById(g), ul = box.querySelector(".vids");
+      placed[g].sort(function(a, b){ return a.order - b.order; }).forEach(function(x){ ul.appendChild(x.el); });
+      box.hidden = placed[g].length === 0;
+    });
+    // if nothing could be recognised (titles unavailable), show all videos in one group
+    var known = placed["g-model"].length + placed["g-fit"].length + placed["g-jet"].length;
+    if (!known) { var o = document.getElementById("g-other"); o.querySelector(".gh").textContent = "All videos"; }
+  });
+})();
+</script>
 </body>
 </html>

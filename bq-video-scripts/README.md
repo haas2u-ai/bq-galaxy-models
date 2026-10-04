@@ -4,8 +4,8 @@ Python scripts that produce the animations of E.P.J. de Haas's constant-Lagrangi
 metric-inflow galaxy model and the three-rapidity Painlevé–Gullstrand (PG) jet geometry.
 Every frame is computed from the model equations; nothing is drawn by hand.
 
-* Videos and interactive 3D models: https://haas2u-ai.github.io/bq-galaxy-models/landing.html
-* Interactive models only: https://haas2u-ai.github.io/bq-galaxy-models/
+* Videos and overview: https://haas2u-ai.github.io/bq-galaxy-models/
+* Interactive models: https://haas2u-ai.github.io/bq-galaxy-models/models.html
 
 ## Requirements
 
