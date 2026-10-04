@@ -49,6 +49,7 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5vw,54px);line-
 .sechead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:18px}
 .sechead h2{font-family:var(--serif);font-weight:600;font-size:clamp(24px,2.6vw,32px);margin:0}
 .sechead p{margin:0;color:var(--soft);font-size:14.5px}
+.sechead p a{color:var(--cyan)}
 .group{margin-bottom:34px}.gh{font-family:var(--serif);font-weight:600;font-size:21px;margin:0 0 4px}.gp{color:var(--soft);font-size:14.5px;margin:0 0 14px}
 .vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;list-style:none;margin:0;padding:0}
 .vid{background:var(--surface);border:1px solid var(--edge);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
@@ -120,7 +121,7 @@ footer li{margin-bottom:4px}
   <section aria-labelledby="videos-h">
     <div class="sechead">
       <h2 id="videos-h">Videos</h2>
-      <p>Click a video to play it here, or open it on YouTube.</p>
+      <p>Click a video to play it here, or open it on YouTube. Every frame is computed from the model equations — <a href="https://github.com/haas2u-ai/bq-galaxy-models/tree/main/bq-video-scripts">get the Python scripts</a>.</p>
     </div>
     <div class="group" id="g-model"><h3 class="gh">The galaxy model</h3><p class="gp">How space flows through a galaxy, and how a constant-Lagrangian inflow shapes spiral arms, nested spirals and the Hubble sequence.</p><ul class="vids"></ul></div>
     <div class="group" id="g-fit"><h3 class="gh">Fitting real rotation curves</h3><p class="gp">Step-by-step fits to SPARC data: one Lagrangian, two Lagrangians, and a constant offset.</p><ul class="vids"></ul></div>
@@ -141,6 +142,7 @@ footer li{margin-bottom:4px}
       <strong style="color:var(--ink)">Links</strong>
       <ul>
         <li><a href="https://haas2u-ai.github.io/bq-galaxy-models/">Interactive models</a></li>
+        <li><a href="https://github.com/haas2u-ai/bq-galaxy-models/tree/main/bq-video-scripts">Python scripts for the videos</a> (MIT licence)</li>
         <li><a href="https://github.com/haas2u-ai/bq-galaxy-models">Source on GitHub</a></li>
       </ul>
     </div>
