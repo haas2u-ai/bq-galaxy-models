@@ -1,0 +1,34 @@
+galaxy,dAIC_k2,comp_k2,dAIC_best,cl_best_k,cl_best_model,comp_best,comp_best_k,dBIC_best,lowest_family,dm_type
+UGC 1281,-2.05,MOND,-2.05,2,Original (no virial),MOND,2,-2.06,CL,NFW
+NGC 2366,-15.31,DM,-18.2,3,Inflow +virial window (p = −1),DM,2,-18.38,CL,ISO
+ESO079–G014,3.49,MOND,-4.62,3,"Inflow (R,M,ΦBH)",MOND,2,-3.92,CL,ISO
+F579–V1,0.86,DM,0.86,2,"Inflow (R,M)",DM,2,0.86,DM,ISO
+UGC 4278,27.5,MOND,-12.63,4,Inflow: two–L (bulge band),MOND,2,-10.18,CL,NFW
+NGC 3917,-18.18,MOND,-18.18,2,"Inflow (R,M)",MOND,2,-18.18,CL,NFW
+NGC 24,-0.73,MOND,-2.31,3,Inflow + virial (2–3 kpc),MOND,2,-0.94,CL,ISO
+NGC 2976,-3.36,DM,-7.27,3,"Inflow + virial [1.0,2.2]",DM,2,-5.98,CL,ISO
+UGC 8286,-9.16,MOND,-9.16,2,"Inflow (R,M)",MOND,2,-9.16,CL,ISO
+UGC 12632,2.76,DM,2.7,3,"Inflow (R,M,ΦBH)",DM,2,2.76,DM,ISO
+F574–1,0.66,DM,0.66,2,"Inflow (R,M)",DM,2,0.66,DM,ISO
+UGCA 444,6.63,MOND,4.63,5,Two–L piecewise +ΦBH,MOND,2,6.64,MOND,ISO
+NGC 55,10.55,MOND,-3.55,4,Inflow +ΦBH+virial (rv = 7 kpc),MOND,2,-1.46,CL,ISO
+NGC 247,128.67,DM,-16.63,5,(2) Two–L (full first) + ΦBH,MOND,5,-16.63,CL,ISO
+NGC 3877,-4.97,MOND,-4.97,2,"Inflow (R,M)",MOND,2,-4.97,CL,ISO
+UGC 5005,1.53,MOND,1.53,2,"Inflow (R,M)",MOND,2,1.53,MOND,ISO
+UGC 7524,23.4,MOND,3.9,5,(3) Two–L + ΦBH,MOND,2,6.79,MOND,ISO
+DDO 161,45.92,MOND,-2.09,4,(2) Two–L (piecewise),MOND,2,0.78,CL,ISO
+NGC 3741,-8.7,MOND,-17.87,5,Two–L + ΦBH,MOND,2,-14.74,CL,ISO
+NGC 3109,12.72,DM,10.06,5,Two–L + ΦBH (piecewise),DM,2,12.71,DM,ISO
+D631–7,14.88,DM,2.88,4,Two–L (piecewise),DM,2,4.43,DM,ISO
+IC 2574,377.66,MOND,-25.08,4,Two–L (piecewise),MOND,2,-22.03,CL,ISO
+F571–8,27.94,DM,-5.83,4,Inflow: two–L (piecewise),DM,2,-4.7,CL,ISO
+F583–4,2.85,DM,2.85,2,"Inflow (R,M)",DM,2,2.85,DM,ISO
+UGC 6446,0.29,DM,0.29,2,"Inflow (R,M)",DM,2,0.29,DM,ISO
+NGC 3972,4.49,DM,-1.61,4,Two–L (piecewise),DM,2,-1.01,CL,ISO+baryon
+UGC 5829,5.97,MOND,3.5,4,"Two–L (R1,M1)/(R2,M2)",MOND,2,4.31,MOND,ISO
+UGC 12732,21.47,DM,-9.0,5,Two–L + ΦBH,DM,2,-8.38,CL,ISO
+UGC 6628,-0.01,MOND,-0.01,2,"Single–L (R,M)",MOND,2,-0.01,CL,ISO
+UGC 7577,0.31,MOND,0.31,2,"Single–L (R,M)",MOND,2,0.32,MOND,ISO
+F574–2,0.1,DM,0.1,2,"Inflow (R,M)",DM,2,0.1,DM,ISO
+UGC 5999,-1.54,DM,-1.54,2,"Inflow (R,M)",DM,2,-1.54,CL,ISO
+UGC 11914,-401.7,DM,-562.8,6,Two–L + ΦBH+inner/outer virials,DM,2,-553.8,CL,ISO
