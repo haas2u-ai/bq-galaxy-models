@@ -85,7 +85,7 @@ footer li{margin-bottom:4px}
 <body>
 <main>
   <header>
-    <p class="kicker">E.P.J. de Haas · Nijmegen</p>
+    <p class="kicker">E.P.J. de Haas · Kandinsky College, Nijmegen</p>
     <h1>Galaxies and jets as flows of space</h1>
     <p class="lede">Animations and interactive 3D models of the <em>constant-Lagrangian metric-inflow</em> galaxy model and the three-rapidity <em>Painlevé–Gullstrand</em> jet geometry — from rotation-curve fits and the Hubble sequence to the jet of M 87.</p>
   </header>
@@ -122,7 +122,7 @@ footer li{margin-bottom:4px}
       <h2 id="videos-h">Videos</h2>
       <p>Click a video to play it here, or open it on YouTube.</p>
     </div>
-    <div class="group" id="g-model"><h3 class="gh">The galaxy model</h3><p class="gp">How a constant-Lagrangian inflow of space shapes spiral arms, nested spirals and the Hubble sequence.</p><ul class="vids"></ul></div>
+    <div class="group" id="g-model"><h3 class="gh">The galaxy model</h3><p class="gp">How space flows through a galaxy, and how a constant-Lagrangian inflow shapes spiral arms, nested spirals and the Hubble sequence.</p><ul class="vids"></ul></div>
     <div class="group" id="g-fit"><h3 class="gh">Fitting real rotation curves</h3><p class="gp">Step-by-step fits to SPARC data: one Lagrangian, two Lagrangians, and a constant offset.</p><ul class="vids"></ul></div>
     <div class="group" id="g-jet"><h3 class="gh">Jets</h3><p class="gp">Painlevé–Gullstrand cone flows: polar jets in 3D and the jet of M 87.</p><ul class="vids"></ul></div>
     <div class="group" id="g-other" hidden><h3 class="gh">More videos</h3><ul class="vids"></ul></div>
@@ -151,9 +151,11 @@ footer li{margin-bottom:4px}
 (function(){
   "use strict";
   var IDS = ["wQsIR_QUinI","hioiEtpbkh4","LVA3DLV9UHA","ZdEY_My_xRw","oSV22W_Qx10",
-             "u4-MHf3DOBA","AVS9xDFGQgc","oLzBnNbNgcw","cs9dfZt9DWs","AaKJKJkoxzc"];
+             "u4-MHf3DOBA","AVS9xDFGQgc","oLzBnNbNgcw","cs9dfZt9DWs","AaKJKJkoxzc",
+             "k1vrjk239xw"];
   // Known videos: [match in YouTube title, group, order, short description]
   var KNOWN = [
+    [/how space flows/i,     "g-model", 0, "The riverbed of space: random cell creation gives Hubble’s law, absorption in matter a slow replacement drift, and the riverbed carries matter into CL spirals with a limit circle."],
     [/galactic disk model/i, "g-model", 1, "A metric-inflow spiral across cosmic time: how the arms change as the bulge grows and the Hubble rate falls."],
     [/double lagrangian/i,   "g-model", 2, "Two flow regimes in one galaxy: a nested inner spiral, a ring at the reset radius, and the outer disk spiral."],
     [/bulge reset/i,         "g-model", 3, "How an inner spiral and a ring form when the bulge–bar system becomes a new bulge."],
