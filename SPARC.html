@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SPARC rotation curves in the constant-Lagrangian model (E.P.J. de Haas)</title>
+<meta name="description" content="Constant-Lagrangian inflow fits of all 175 SPARC rotation curves: the fitting pipeline, five category reports and the overall classification, with code and data.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#05070d;--surface:#0d1220;--edge:#222c42;--ink:#e7ebf3;--soft:#97a2b9;--amber:#f2a24a;--cyan:#48dbfb;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--serif:"Source Serif 4","STIX Two Text",Georgia,"Times New Roman",serif}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#f5f6fa;--surface:#ffffff;--edge:#d6dce8;--ink:#141a28;--soft:#55607a;--amber:#b8620f;--cyan:#0f7fb0}}
+:root[data-theme="dark"]{--bg:#05070d;--surface:#0d1220;--edge:#222c42;--ink:#e7ebf3;--soft:#97a2b9;--amber:#f2a24a;--cyan:#48dbfb}
+:root[data-theme="light"]{--bg:#f5f6fa;--surface:#ffffff;--edge:#d6dce8;--ink:#141a28;--soft:#55607a;--amber:#b8620f;--cyan:#0f7fb0}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:auto}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+main{max-width:1160px;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(18px,4vw,40px) 48px}
+a{color:var(--cyan);text-underline-offset:3px} a:hover{color:var(--amber)}
+a:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:2px}
+header{max-width:800px}
+.back{font-size:14px;margin:0 0 22px}
+.kicker{font-size:14px;color:var(--soft);margin:0 0 14px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5vw,52px);line-height:1.06;letter-spacing:-.015em;margin:0 0 18px}
+h2{font-family:var(--serif);font-weight:600;font-size:clamp(24px,2.6vw,31px);line-height:1.15;margin:0 0 10px}
+h3{font-size:17px;font-weight:600;margin:0 0 4px}
+.lede{font-family:var(--serif);font-size:clamp(17px,1.7vw,19.5px);line-height:1.6;color:var(--soft);margin:0;max-width:68ch}
+.lede strong{color:var(--ink);font-weight:600}
+.strip-wrap{margin:clamp(30px,5vw,48px) 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.strip{display:block;width:100%;min-width:760px;height:auto}
+.strip .sN{font-family:var(--serif);font-size:24px;font-weight:600;fill:var(--ink)}
+.strip .sL{font-size:13px;font-weight:500;fill:var(--ink)}
+.strip .sT{font-size:12px;fill:var(--soft)}
+.stripnote{font-size:14px;color:var(--soft);margin:10px 0 0;max-width:80ch}
+section{margin-top:clamp(52px,8vw,88px)}
+.sechead{max-width:72ch;margin-bottom:22px} .sechead p{color:var(--soft);margin:0}
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;background:var(--edge);border:1px solid var(--edge);border-radius:10px;overflow:hidden}
+ol.steps li{counter-increment:s;background:var(--surface);padding:18px 18px 20px}
+ol.steps li::before{content:counter(s);font-family:var(--serif);font-size:28px;font-weight:600;color:var(--amber);display:block;line-height:1;margin-bottom:8px}
+ol.steps p{margin:0;color:var(--soft);font-size:14.5px}
+.pipe-links{margin:14px 0 0;font-size:14.5px} .pipe-links a{margin-right:18px}
+ul.cats{list-style:none;padding:0;margin:0;border-top:1px solid var(--edge)}
+li.cat{display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(12px,2vw,24px);padding:22px 0;border-bottom:1px solid var(--edge)}
+.letter{font-family:var(--serif);font-size:54px;line-height:.9;font-weight:600;color:var(--amber)}
+.cbody p{margin:4px 0;max-width:78ch} .crit{color:var(--soft);font-size:15px}
+.n{font-weight:400;color:var(--soft);font-size:14px;margin-left:6px}
+.bar{display:flex;height:12px;border-radius:3px;overflow:hidden;margin:12px 0 10px;max-width:640px;gap:2px}
+.bar span{display:block;min-width:4px}
+.links{font-size:14.5px} .links a{margin-right:16px;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--soft);margin:0 0 6px}
+.legend i,.sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+figure{margin:0 0 26px} figure img{display:block;width:100%;height:auto;border-radius:8px;background:#fff;border:1px solid var(--edge)}
+figcaption{font-size:14px;color:var(--soft);margin-top:8px;max-width:80ch}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--edge);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:760px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--edge);vertical-align:top}
+th{font-weight:600;color:var(--soft);font-size:13.5px} tr:last-child td{border-bottom:0}
+td:nth-child(2),td:nth-child(4),td:nth-child(5),td:nth-child(6){white-space:nowrap}
+.overall-links{margin:16px 0 0;font-size:15px} .overall-links a{margin-right:18px}
+pre{background:var(--surface);border:1px solid var(--edge);border-radius:10px;padding:16px 18px;overflow-x:auto;font-size:13.5px;line-height:1.5;color:var(--ink)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,44px)}
+.two p{color:var(--soft);margin:0 0 12px}
+footer{margin-top:clamp(56px,8vw,90px);padding-top:24px;border-top:1px solid var(--edge);font-size:14.5px;color:var(--soft);display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:28px}
+footer ul{padding-left:18px;margin:8px 0 0} footer li{margin-bottom:6px}
+@media (max-width:760px){.two,footer{grid-template-columns:1fr} li.cat{grid-template-columns:40px minmax(0,1fr)} .letter{font-size:36px}}
+@media (prefers-reduced-motion:no-preference){.strip g path{stroke-dasharray:240;stroke-dashoffset:240;animation:draw 1.4s ease-out forwards}
+ .strip g:nth-of-type(2) path{animation-delay:.12s} .strip g:nth-of-type(3) path{animation-delay:.24s} .strip g:nth-of-type(4) path{animation-delay:.36s}
+ .strip g:nth-of-type(5) path{animation-delay:.48s} .strip g:nth-of-type(6) path{animation-delay:.6s} .strip g:nth-of-type(7) path{animation-delay:.72s}
+ @keyframes draw{to{stroke-dashoffset:0}}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <p class="back"><a href="index.html">Galaxies and jets as flows of space</a></p>
+  <p class="kicker">E.P.J. de Haas · Kandinsky College, Nijmegen · SPARC fits 2026</p>
+  <h1>All 175 SPARC rotation curves in the constant-Lagrangian model</h1>
+  <p class="lede">Every rotation curve of the SPARC database was fitted with the constant-Lagrangian inflow model and, where the data asked for it, with its extensions: a second Lagrangian or a virial window. <strong>100 galaxies need only one Lagrangian.</strong> The rest add one or two features, and which feature appears follows the size of the bulge.</p>
+</header>
+<div class="strip-wrap"><svg class="strip" viewBox="-4 -4 1046 190" role="img" aria-labelledby="strip-t">
+<title id="strip-t">The seven rotation-curve classes, ordered from late-type to early-type galaxies, with the number of SPARC galaxies in each</title>
+<g transform="translate(0 0)"><title>Single Lagrangian: 100 galaxies, median type Sm</title>
+  <rect x="0" y="0" width="132" height="78" rx="6" fill="var(--surface)" stroke="var(--edge)"/>
+  <path d="M 6 62 C 26 60, 30 22, 52 18 S 96 12, 116 11" transform="translate(5 4)" fill="none" stroke="#9aa6bf" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="66" y="100" text-anchor="middle" class="sN">100</text>
+  <text x="66" y="120" text-anchor="middle" class="sL">Single Lagrangian</text>
+  <text x="66" y="137" text-anchor="middle" class="sT">median Sm</text></g><g transform="translate(150 0)"><title>Two Lagrangians: 25 galaxies, median type Sm</title>
+  <rect x="0" y="0" width="132" height="78" rx="6" fill="var(--surface)" stroke="var(--edge)"/>
+  <path d="M 6 62 C 18 60, 24 38, 40 36 S 58 33, 64 33 L 64 26 C 76 22, 96 14, 116 12" transform="translate(5 4)" fill="none" stroke="#4fd1a5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="66" y="100" text-anchor="middle" class="sN">25</text>
+  <text x="66" y="120" text-anchor="middle" class="sL">Two Lagrangians</text>
+  <text x="66" y="137" text-anchor="middle" class="sT">median Sm</text></g><g transform="translate(300 0)"><title>Single + descent: 24 galaxies, median type Sbc</title>
+  <rect x="0" y="0" width="132" height="78" rx="6" fill="var(--surface)" stroke="var(--edge)"/>
+  <path d="M 6 62 C 18 58, 24 18, 40 16 C 52 15, 58 20, 70 26 S 100 32, 116 33" transform="translate(5 4)" fill="none" stroke="#a29bfe" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="66" y="100" text-anchor="middle" class="sN">24</text>
+  <text x="66" y="120" text-anchor="middle" class="sL">Single + descent</text>
+  <text x="66" y="137" text-anchor="middle" class="sT">median Sbc</text></g><g transform="translate(450 0)"><title>Descent only: 7 galaxies, median type Sb</title>
+  <rect x="0" y="0" width="132" height="78" rx="6" fill="var(--surface)" stroke="var(--edge)"/>
+  <path d="M 6 62 L 9 10 C 14 6, 22 16, 34 22 S 80 32, 116 34" transform="translate(5 4)" fill="none" stroke="#ff7a8a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="66" y="100" text-anchor="middle" class="sN">7</text>
+  <text x="66" y="120" text-anchor="middle" class="sL">Descent only</text>
+  <text x="66" y="137" text-anchor="middle" class="sT">median Sb</text></g><g transform="translate(600 0)"><title>Multi-region: 6 galaxies, median type Sc</title>
+  <rect x="0" y="0" width="132" height="78" rx="6" fill="var(--surface)" stroke="var(--edge)"/>
+  <path d="M 6 62 C 16 58, 22 16, 36 15 C 50 14, 60 30, 76 30 S 100 20, 116 16" transform="translate(5 4)" fill="none" stroke="#48dbfb" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="66" y="100" text-anchor="middle" class="sN">6</text>
+  <text x="66" y="120" text-anchor="middle" class="sL">Multi-region</text>
+  <text x="66" y="137" text-anchor="middle" class="sT">median Sc</text></g><g transform="translate(750 0)"><title>Flattening: 2 galaxies, median type Sbc</title>
+  <rect x="0" y="0" width="132" height="78" rx="6" fill="var(--surface)" stroke="var(--edge)"/>
+  <path d="M 6 62 C 20 60, 26 30, 44 26 L 116 18" transform="translate(5 4)" fill="none" stroke="#7fb8ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="66" y="100" text-anchor="middle" class="sN">2</text>
+  <text x="66" y="120" text-anchor="middle" class="sL">Flattening</text>
+  <text x="66" y="137" text-anchor="middle" class="sT">median Sbc</text></g><g transform="translate(900 0)"><title>Unresolved: 11 galaxies, median type Sab</title>
+  <rect x="0" y="0" width="132" height="78" rx="6" fill="var(--surface)" stroke="var(--edge)"/>
+  <path d="M 6 62 L 10 14 C 14 8, 20 22, 28 18 S 40 26, 50 20 S 70 30, 84 24 S 104 30, 116 27" transform="translate(5 4)" fill="none" stroke="#f2a24a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="66" y="100" text-anchor="middle" class="sN">11</text>
+  <text x="66" y="120" text-anchor="middle" class="sL">Unresolved</text>
+  <text x="66" y="137" text-anchor="middle" class="sT">median Sab</text></g>
+<line x1="4" y1="162" x2="1030" y2="162" stroke="var(--soft)" stroke-width="1"/>
+<path d="M1030 162 l-8 -4 v8 z" fill="var(--soft)"/>
+<text x="4" y="176" class="sT" text-anchor="start">bulgeless disks</text><text x="1030" y="176" class="sT" text-anchor="end">bulge-dominated spirals</text></svg></div>
+<p class="stripnote">The seven classes of the overall report, with the typical shape of v²(r) and the number of galaxies in each. From left to right the share of galaxies with a photometric bulge rises from 2% to 86%.</p>
+
+<section aria-labelledby="pipe-h">
+  <div class="sechead"><h2 id="pipe-h">How the sample was sorted</h2>
+  <p>A single-Lagrangian fit comes first. The pattern of its residuals then decides which extension is tested.</p></div>
+  <ol class="steps">
+    <li><h3>Fit one Lagrangian</h3><p>Fit (M, R) to v²(r) of every galaxy, with H<sub>z</sub> = 2.2×10⁻¹⁸ s⁻¹ fixed.</p></li>
+    <li><h3>Read the residuals</h3><p>A runs test and two sign templates sort the galaxies into categories A to E.</p></li>
+    <li><h3>Test the extensions</h3><p>Two Lagrangians, one or two virial windows, compared with the single fit by BIC.</p></li>
+    <li><h3>Accept or keep</h3><p>An extension is accepted at ΔBIC &lt; −6 and screened for physically sensible parameters.</p></li>
+    <li><h3>Flag short curves</h3><p>Curves with 13 points or fewer are marked tentative.</p></li>
+  </ol>
+  <p class="pipe-links"><a href="SPARC-CL-fit/01_pipeline/CL_pipeline_SPARC.pdf">Pipeline report (PDF)</a><a href="SPARC-CL-fit/01_pipeline/single_L_atlas.pdf">Single-L atlas, 175 galaxies</a><a href="SPARC-CL-fit/01_pipeline/double_L_atlas.pdf">First two-L atlas</a><a href="SPARC-CL-fit/01_pipeline/pipeline_summary_SPARC175.csv">Summary (CSV)</a></p>
+</section>
+
+<section aria-labelledby="cat-h">
+  <div class="sechead"><h2 id="cat-h">The five category reports</h2>
+  <p>Each report gives the fits, residual diagnostics, parameter uncertainties (statistical, jackknife, distance and inclination) and an atlas with a residual panel for every galaxy. The coloured bar shows where the galaxies of each category end up in the overall classification.</p></div>
+  <div class="legend"><span><i style="background:#9aa6bf"></i>Single Lagrangian</span><span><i style="background:#4fd1a5"></i>Two Lagrangians</span><span><i style="background:#a29bfe"></i>Single + descent</span><span><i style="background:#ff7a8a"></i>Descent only</span><span><i style="background:#48dbfb"></i>Multi-region</span><span><i style="background:#7fb8ff"></i>Flattening</span><span><i style="background:#f2a24a"></i>Unresolved</span></div>
+  <ul class="cats"><li class="cat"><div class="letter" aria-hidden="true">A</div>
+<div class="cbody"><h3>Category A: Single-L adequate <span class="n">54 galaxies</span></h3><p class="crit">No residual structure and χ²<sub>ν</sub> ≤ 1.</p><p>All 54 keep one Lagrangian; 17 have both M and R determined to 30% (grade I).</p><div class="bar" role="img" aria-label="Outcome of category A: 54 single lagrangian"><span style="flex:54;background:#9aa6bf" title="Single Lagrangian: 54"></span></div><p class="links"><a href="SPARC-CL-fit/02_category_A_single/CL_categoryA_report.pdf">Report (PDF)</a><a href="SPARC-CL-fit/02_category_A_single/catA_atlas.pdf">Atlas</a><a href="SPARC-CL-fit/02_category_A_single/categoryA_results.csv">Results (CSV)</a><a href="SPARC-CL-fit/02_category_A_single/CL_categoryA_report.tex">LaTeX</a></p></div></li><li class="cat"><div class="letter" aria-hidden="true">B</div>
+<div class="cbody"><h3>Category B: + − + residual wave <span class="n">45 galaxies</span></h3><p class="crit">Data first above, then below, then above the single-L curve.</p><p>13 clean nested two-L fits, 8 of them the 2018 double-fit galaxies; 5 need more regions; 5 are not nested.</p><div class="bar" role="img" aria-label="Outcome of category B: 22 single lagrangian, 18 two lagrangians, 5 unresolved"><span style="flex:22;background:#9aa6bf" title="Single Lagrangian: 22"></span><span style="flex:18;background:#4fd1a5" title="Two Lagrangians: 18"></span><span style="flex:5;background:#f2a24a" title="Unresolved: 5"></span></div><p class="links"><a href="SPARC-CL-fit/03_category_B_double/CL_categoryB_report.pdf">Report (PDF)</a><a href="SPARC-CL-fit/03_category_B_double/catB_atlas_accepted.pdf">Atlas, accepted</a><a href="SPARC-CL-fit/03_category_B_double/catB_atlas_rejected.pdf">Atlas, single-L kept</a><a href="SPARC-CL-fit/03_category_B_double/categoryB_results.csv">Results (CSV)</a><a href="SPARC-CL-fit/03_category_B_double/CL_categoryB_report.tex">LaTeX</a></p></div></li><li class="cat"><div class="letter" aria-hidden="true">C</div>
+<div class="cbody"><h3>Category C: − + − residual wave <span class="n">41 galaxies</span></h3><p class="crit">Data above the curve near the peak, below it further out.</p><p>26 Keplerian descent windows, always preferred over two-L; floor A and window radius to 6% and 9%.</p><div class="bar" role="img" aria-label="Outcome of category C: 12 single lagrangian, 1 two lagrangians, 20 single + descent, 6 descent only, 2 flattening"><span style="flex:12;background:#9aa6bf" title="Single Lagrangian: 12"></span><span style="flex:1;background:#4fd1a5" title="Two Lagrangians: 1"></span><span style="flex:20;background:#a29bfe" title="Single + descent: 20"></span><span style="flex:6;background:#ff7a8a" title="Descent only: 6"></span><span style="flex:2;background:#7fb8ff" title="Flattening: 2"></span></div><p class="links"><a href="SPARC-CL-fit/04_category_C_descent/CL_categoryC_report.pdf">Report (PDF)</a><a href="SPARC-CL-fit/04_category_C_descent/catC_atlas.pdf">Atlas</a><a href="SPARC-CL-fit/04_category_C_descent/categoryC_results.csv">Results (CSV)</a><a href="SPARC-CL-fit/04_category_C_descent/CL_categoryC_report.tex">LaTeX</a></p></div></li><li class="cat"><div class="letter" aria-hidden="true">D</div>
+<div class="cbody"><h3>Category D: Other residual structure <span class="n">18 galaxies</span></h3><p class="crit">Structured, but matching neither template.</p><p>Heterogeneous: 6 within errors, 7 absorbed by windows or resets, 5 bulge-dominated beyond the present model.</p><div class="bar" role="img" aria-label="Outcome of category D: 6 single lagrangian, 1 two lagrangians, 1 single + descent, 1 descent only, 4 multi-region, 5 unresolved"><span style="flex:6;background:#9aa6bf" title="Single Lagrangian: 6"></span><span style="flex:1;background:#4fd1a5" title="Two Lagrangians: 1"></span><span style="flex:1;background:#a29bfe" title="Single + descent: 1"></span><span style="flex:1;background:#ff7a8a" title="Descent only: 1"></span><span style="flex:4;background:#48dbfb" title="Multi-region: 4"></span><span style="flex:5;background:#f2a24a" title="Unresolved: 5"></span></div><p class="links"><a href="SPARC-CL-fit/05_category_D_structured/CL_categoryD_report.pdf">Report (PDF)</a><a href="SPARC-CL-fit/05_category_D_structured/catD_atlas.pdf">Atlas</a><a href="SPARC-CL-fit/05_category_D_structured/categoryD_results.csv">Results (CSV)</a><a href="SPARC-CL-fit/05_category_D_structured/CL_categoryD_report.tex">LaTeX</a></p></div></li><li class="cat"><div class="letter" aria-hidden="true">E</div>
+<div class="cbody"><h3>Category E: Poor fit, no detected structure <span class="n">17 galaxies</span></h3><p class="crit">χ²<sub>ν</sub> > 1 with a runs test too weak for short curves.</p><p>Not a physical class: 11 galaxies show B-, C- or D-type features once tested by BIC.</p><div class="bar" role="img" aria-label="Outcome of category E: 6 single lagrangian, 5 two lagrangians, 3 single + descent, 2 multi-region, 1 unresolved"><span style="flex:6;background:#9aa6bf" title="Single Lagrangian: 6"></span><span style="flex:5;background:#4fd1a5" title="Two Lagrangians: 5"></span><span style="flex:3;background:#a29bfe" title="Single + descent: 3"></span><span style="flex:2;background:#48dbfb" title="Multi-region: 2"></span><span style="flex:1;background:#f2a24a" title="Unresolved: 1"></span></div><p class="links"><a href="SPARC-CL-fit/06_category_E_poor/CL_categoryE_report.pdf">Report (PDF)</a><a href="SPARC-CL-fit/06_category_E_poor/catE_atlas.pdf">Atlas</a><a href="SPARC-CL-fit/06_category_E_poor/categoryE_results.csv">Results (CSV)</a><a href="SPARC-CL-fit/06_category_E_poor/CL_categoryE_report.tex">LaTeX</a></p></div></li></ul>
+</section>
+
+<section aria-labelledby="ov-h">
+  <div class="sechead"><h2 id="ov-h">Overall classification</h2>
+  <p>The five reports combined into one classification of all 175 galaxies, without refitting. Each galaxy is given the simplest description its own analysis accepted.</p></div>
+  <figure><img src="SPARC-CL-fit/assets/overall_gallery.png" alt="Seven rotation curves, one per class, with the single-Lagrangian fit dotted and the final description solid" width="1752" height="820" loading="lazy">
+  <figcaption>One galaxy per class: UGC 5005, IC 2574, NGC 3198, UGC 5253, NGC 2841, ESO563-G021 and UGC 2487. Dotted: single Lagrangian; solid: final description.</figcaption></figure>
+  <div class="tbl"><table>
+  <thead><tr><th>Class</th><th>Galaxies</th><th>Median type</th><th>With bulge</th><th>Median χ²<sub>ν</sub>, single → final</th><th>Median RMS<sub>rel</sub></th><th>Description</th></tr></thead>
+  <tbody><tr><td><i class="sw" style="background:#9aa6bf"></i>Single Lagrangian</td><td>100</td><td>Sm</td><td>2%</td><td>0.28 → 0.28</td><td>0.109</td><td>One constant Lagrangian (M, R) fits the whole curve.</td></tr><tr><td><i class="sw" style="background:#4fd1a5"></i>Two Lagrangians</td><td>25</td><td>Sm</td><td>8%</td><td>3.26 → 0.90</td><td>0.127</td><td>An inner Lagrangian hands over to an outer one at R₂: a nested spiral.</td></tr><tr><td><i class="sw" style="background:#a29bfe"></i>Single + descent</td><td>24</td><td>Sbc</td><td>42%</td><td>4.28 → 0.89</td><td>0.075</td><td>CL rise and peak, then a Keplerian descent onto a floor.</td></tr><tr><td><i class="sw" style="background:#ff7a8a"></i>Descent only</td><td>7</td><td>Sb</td><td>86%</td><td>5.54 → 1.06</td><td>0.053</td><td>Compact central mass with a Keplerian descent from the first points.</td></tr><tr><td><i class="sw" style="background:#48dbfb"></i>Multi-region</td><td>6</td><td>Sc</td><td>33%</td><td>4.94 → 1.14</td><td>0.052</td><td>Two virial windows, or a reset plus a window.</td></tr><tr><td><i class="sw" style="background:#7fb8ff"></i>Flattening</td><td>2</td><td>Sbc</td><td>50%</td><td>2.34 → 0.76</td><td>0.070</td><td>Beyond the window radius the curve keeps rising, but more slowly.</td></tr><tr><td><i class="sw" style="background:#f2a24a"></i>Unresolved</td><td>11</td><td>Sab</td><td>82%</td><td>3.06 → 0.80</td><td>0.058</td><td>A sharp inner peak the CL bulge cannot follow.</td></tr></tbody></table></div>
+  <figure style="margin-top:26px"><img src="SPARC-CL-fit/assets/overall_morphology.png" alt="Hubble-type composition of the seven classes: late types in single and double, intermediate spirals in descent, early types in descent-only and unresolved" width="1536" height="468" loading="lazy">
+  <figcaption>The classes form a sequence along the Hubble types (Kruskal–Wallis p ≈ 6×10⁻¹² for the four main classes).</figcaption></figure>
+  <p class="overall-links"><a href="SPARC-CL-fit/07_overall/CL_SPARC_overall_report.pdf">Overall report (PDF)</a><a href="SPARC-CL-fit/07_overall/SPARC_overall_classes.csv">Class of every galaxy (CSV)</a><a href="SPARC-CL-fit/07_overall/CL_SPARC_overall_report.tex">LaTeX</a></p>
+</section>
+
+<section aria-labelledby="code-h">
+  <div class="two">
+    <div><h2 id="code-h">Code and data</h2>
+    <p>The Python scripts reproduce every fit, figure and report. Each step stores its results, so a later step can be rerun without repeating the earlier ones.</p>
+    <p>Put the SPARC files <code>MassModels_Lelli2016c.mrt</code> and <code>Table1wbulge.mrt</code> in <code>SPARC-CL-fit/data/</code>, or point the variable <code>SPARC_DATA</code> to their folder.</p>
+    <p><a href="https://github.com/haas2u-ai/bq-galaxy-models/tree/main/SPARC-CL-fit">Browse the folder on GitHub</a></p></div>
+    <pre>cd SPARC-CL-fit/code
+python pipeline.py && python pipeline_plots.py && python make_report.py
+python catA.py && python catA_plots.py && python catA_report.py
+python catB.py && python catB_profile.py && python catB_fix.py
+python catB.py && python catB_profile.py
+python catB_plots.py && python catB_report.py
+python catC.py && python catC_post.py
+python catC_plots.py && python catC_report.py
+python catD.py && python catD_post.py && python catD_status.py
+python catD_plots.py && python catD_report.py
+python catE.py && python catE_post.py
+python catE_plots.py && python catE_report.py
+python overall_build.py && python overall_plots.py
+python overall_report.py</pre>
+  </div>
+</section>
+
+<footer>
+  <div><strong style="color:var(--ink)">Model and data</strong>
+  <ul>
+    <li>E.P.J. de Haas, From rotation curves to cosmic time: probing high-redshift expansion through nested spiral dynamics, <i>J. High Energy Phys. Gravit. Cosmol.</i> 12 (2026) 334–367, <a href="https://doi.org/10.4236/jhepgc.2026.121022">doi:10.4236/jhepgc.2026.121022</a> (virial term and multi-region model)</li>
+    <li>E.P.J. de Haas, Galactic rotation curves and the constant-Lagrangian field: empirical tests within the Q<sub>g</sub> rotor framework (manuscript; single-L, virial term and two-L equations)</li>
+    <li>F. Lelli, S.S. McGaugh, J.M. Schombert (2016), SPARC: mass models for 175 disk galaxies, <i>AJ</i> 152, 157, <a href="https://doi.org/10.3847/0004-6256/152/6/157">doi:10.3847/0004-6256/152/6/157</a></li>
+  </ul></div>
+  <div><strong style="color:var(--ink)">Links</strong>
+  <ul>
+    <li><a href="index.html">Videos and overview</a></li>
+    <li><a href="models.html">Interactive models</a></li>
+    <li><a href="https://github.com/haas2u-ai/bq-galaxy-models">Source on GitHub</a></li>
+  </ul></div>
+</footer>
+</main>
+</body>
+</html>
