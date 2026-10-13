@@ -2,7 +2,7 @@
 
 Companion material for **"The central velocity gradient–surface brightness relation and the baryonic Tully–Fisher relation in two-parameter constant-Lagrangian fits to SPARC"** (E.P.J. de Haas, 2026).
 
-Archived release: https://doi.org/10.5281/zenodo.23339753. Project overview, CL fit atlases and interactive models: https://haas2u-ai.github.io/bq-galaxy-models/
+Archived release: https://doi.org/10.5281/zenodo.23340027. Project overview, CL fit atlases and interactive models: https://haas2u-ai.github.io/bq-galaxy-models/
 
 The paper refits all 175 SPARC galaxies with its own code (single CL curve fitted in v²); its per-galaxy results are in `data/galaxies.csv`, not the earlier atlas fits shown on the project site.
 
