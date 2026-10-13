@@ -1,0 +1,13 @@
+{
+ "n": 131,
+ "median_rms_CL_dex": 0.09700588194136757,
+ "median_rms_atan_dex": 0.09051525872079308,
+ "frac_CL_better": 0.48854961832061067,
+ "scatter_dlogR": 0.24408091743424243,
+ "scatter_dlogrt": 0.297085471486219,
+ "scatter_dlogvL": 0.07789904197367836,
+ "median_rmsfit_CL_dex": 0.03706297873626602,
+ "median_rmsfit_atan_dex": 0.026543380701229375,
+ "median_frac_err_CL": 0.25027596342874725,
+ "median_frac_err_atan": 0.23172926117158665
+}
