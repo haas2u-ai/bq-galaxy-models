@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Interactive models — metric-inflow galaxies, the riverbed of space and PG jets (E.P.J. de Haas)</title>
-<meta name="description" content="Interactive models of the constant-Lagrangian metric-inflow galaxy model and Painlevé–Gullstrand jets: a spiral galaxy with polar jets, the Hubble sequence from cone occupation, the M87 jet, and the riverbed of space.">
+<title>Interactive models — metric-inflow galaxies, the riverbed of space, PG jets and SPARC tests (E.P.J. de Haas)</title>
+<meta name="description" content="Interactive models of the constant-Lagrangian metric-inflow galaxy model and Painlevé–Gullstrand jets: a spiral galaxy with polar jets, the Hubble sequence from cone occupation, the M87 jet, the riverbed of space, and three explorers that test the CL fits against SPARC data.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
@@ -47,6 +47,10 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.6vw,50px);lin
 .open::after{content:" →"}
 section.about{margin-top:clamp(40px,6vw,64px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
   border-top:1px solid var(--edge);padding-top:32px}
+h2.group{font-family:var(--serif);font-weight:600;font-size:clamp(22px,2.6vw,28px);margin:0 0 14px}
+.grid.three{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.groupnote{color:var(--soft);max-width:72ch;margin:-4px 0 20px}
+h2.group#sparc-tests{margin-top:clamp(40px,6vw,64px)}
 .about h3{font-family:var(--serif);font-weight:600;font-size:20px;margin:0 0 10px}
 .about p,.about li{color:var(--soft);font-size:15px}
 .about p{margin:0 0 12px}
@@ -64,11 +68,12 @@ footer a{color:var(--soft)}
   <header>
     <p class="kicker">E.P.J. de Haas · Kandinsky College, Nijmegen</p>
     <h1>Galaxies and jets as flows of space</h1>
-    <p class="lede">Four interactive models of the <em>constant-Lagrangian metric-inflow</em> galaxy model and the three-rapidity <em>Painlevé–Gullstrand</em> jet geometry. Each runs the model equations live in your browser — drag to rotate, scroll or pinch to zoom, and change the parameters.</p>
+    <p class="lede">Four interactive models of the <em>constant-Lagrangian metric-inflow</em> galaxy model and the three-rapidity <em>Painlevé–Gullstrand</em> jet geometry, which run the model equations live in your browser — drag to rotate, scroll or pinch to zoom, and change the parameters. Below them, three data explorers test the CL fits against the SPARC galaxies.</p>
   </header>
 
+  <h2 class="group" id="models">The models</h2>
   <div class="grid">
-    <a class="card" href="galaxy_pg_jets_interactive.html">
+    <a class="card" href="models/galaxy_pg_jets_interactive.html">
       <svg class="art" viewBox="0 0 320 200" role="img" aria-label="A spiral galaxy seen at an angle with two narrow helical jets along its axis">
         <rect width="320" height="200" fill="#03050b"/>
         <g transform="translate(160 104)">
@@ -90,7 +95,7 @@ footer a{color:var(--soft)}
       </div>
     </a>
 
-    <a class="card" href="hubble_sequence_interactive.html">
+    <a class="card" href="models/hubble_sequence_interactive.html">
       <svg class="art" viewBox="0 0 320 200" role="img" aria-label="The Hubble tuning fork: elliptical, lenticular, and spiral and barred-spiral branches">
         <rect width="320" height="200" fill="#03050b"/>
         <path d="M40 100 H150 L200 64 H290 M150 100 L200 136 H290" fill="none" stroke="#97a2b9" stroke-opacity=".55" stroke-width="1.5"/>
@@ -119,7 +124,7 @@ footer a{color:var(--soft)}
       </div>
     </a>
 
-    <a class="card" href="m87_pg_jet_interactive.html">
+    <a class="card" href="models/m87_pg_jet_interactive.html">
       <svg class="art" viewBox="0 0 320 200" role="img" aria-label="The M87 jet: a black hole with a photon ring, stagnation rings, and a tightening helix on a narrow cone">
         <rect width="320" height="200" fill="#03050b"/>
         <g transform="translate(160 150)">
@@ -142,7 +147,7 @@ footer a{color:var(--soft)}
       </div>
     </a>
 
-    <a class="card" href="riverbed_interactive.html">
+    <a class="card" href="models/riverbed_interactive.html">
       <svg class="art" viewBox="0 0 320 200" role="img" aria-label="Space cells around a galaxy, with a bright bulge, a replacement chain and spiral streamlines winding toward a limit circle">
         <rect width="320" height="200" fill="#03050b"/>
         <g transform="translate(160 100)">
@@ -169,11 +174,72 @@ footer a{color:var(--soft)}
     </a>
   </div>
 
+  <h2 class="group" id="sparc-tests">Testing the fits against SPARC</h2>
+  <p class="groupnote">Three data explorers that set the CL fits of the SPARC galaxies against quantities the fits never used: baryonic mass, photometry and central surface brightness. Click any galaxy to follow it through the plots.</p>
+  <div class="grid three">
+    <a class="card" href="models/cl_btfr_interactive.html">
+      <svg class="art" viewBox="0 0 320 200" role="img" aria-label="Baryonic Tully-Fisher relation: baryonic mass against rotation speed, with the CL plateau speed and the observed flat speed">
+        <rect width="320" height="200" fill="#03050b"/><path d="M40 20 V172 H296" fill="none" stroke="#97a2b9" stroke-opacity=".45"/>
+        <line x1="52" y1="166" x2="290" y2="30" stroke="#feca57" stroke-width="1.6" stroke-dasharray="5 4"/>
+        <circle cx="131.2" cy="128.4" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="74.4" cy="163.8" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="179.1" cy="91.3" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="172.7" cy="99.4" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="66.5" cy="154.6" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="78.5" cy="152.2" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="153.9" cy="109.9" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="108.5" cy="129.6" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="199.8" cy="92.7" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="147.6" cy="107.5" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="278.6" cy="53.5" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="123.5" cy="130.3" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="90.6" cy="149.6" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="242.4" cy="62.4" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="98.8" cy="128.0" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="142.2" cy="108.2" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="181.8" cy="94.7" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="104.5" cy="137.2" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="211.8" cy="67.7" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="190.3" cy="90.4" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="160.4" cy="99.1" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="216.0" cy="87.5" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="113.2" cy="121.2" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="255.8" cy="44.6" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="222.9" cy="62.4" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="84.7" cy="171.8" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="152.5" cy="108.8" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="168.5" cy="94.3" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="66.9" cy="150.0" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="187.5" cy="75.2" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="255.9" cy="44.1" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="192.3" cy="98.6" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="189.1" cy="71.1" r="2.2" fill="#48dbfb" fill-opacity="0.7"/><circle cx="271.5" cy="45.3" r="2.2" fill="#48dbfb" fill-opacity="0.7"/>
+        <circle cx="165.1" cy="93.7" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="216.5" cy="63.2" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="204.3" cy="89.7" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="122.3" cy="119.1" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="145.2" cy="105.8" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="162.3" cy="95.3" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="96.0" cy="137.2" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="231.6" cy="59.5" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="87.2" cy="140.0" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="254.9" cy="53.0" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="76.2" cy="135.4" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="257.6" cy="46.1" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="243.2" cy="55.5" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="151.9" cy="97.5" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="139.1" cy="127.1" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="92.1" cy="122.0" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="97.8" cy="134.6" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="167.6" cy="100.5" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="191.1" cy="80.4" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="152.7" cy="103.3" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="141.5" cy="88.5" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="214.1" cy="58.4" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="174.5" cy="80.0" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="70.2" cy="140.5" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="261.3" cy="43.8" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="238.3" cy="35.5" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="146.7" cy="102.5" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="201.3" cy="77.2" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="72.1" cy="154.1" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="94.7" cy="138.1" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="134.9" cy="112.8" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="92.2" cy="137.1" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="80.9" cy="142.1" r="2.2" fill="#f2a24a" fill-opacity="0.8"/><circle cx="255.6" cy="45.2" r="2.2" fill="#f2a24a" fill-opacity="0.8"/>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11" fill="#c9d1e0"><text x="168" y="190" text-anchor="middle">V<tspan baseline-shift="sub" font-size="8">flat</tspan> and v<tspan baseline-shift="sub" font-size="8">L</tspan></text><text x="22" y="96" text-anchor="middle" transform="rotate(-90 22 96)">M<tspan baseline-shift="sub" font-size="8">bar</tspan></text><text x="236" y="150" fill="#feca57">V⁴ ∝ M<tspan baseline-shift="sub" font-size="8">bar</tspan></text></g>
+      </svg>
+      <div class="body">
+        <h2>CL fits and the BTFR</h2>
+        <p>The baryonic Tully–Fisher relation drawn with four velocity measures, including the observed flat speed and the CL plateau speed v<sub>L</sub>. Tests the embedding condition GM/R² = cH step by step and shows what is independent of what.</p>
+        <div class="tags"><span>V<sub>flat</sub> vs v<sub>L</sub></span><span>embedding GM/R² = cH</span><span>residuals</span></div>
+        <span class="open">Open the explorer</span>
+      </div>
+    </a>
+
+    <a class="card" href="models/cl_population_map_interactive.html">
+      <svg class="art" viewBox="0 0 320 200" role="img" aria-label="Fitted CL parameters against photometric quantities the fits never used, coloured by Hubble type">
+        <rect width="320" height="200" fill="#03050b"/><path d="M40 20 V172 H296" fill="none" stroke="#97a2b9" stroke-opacity=".45"/>
+        <circle cx="87.1" cy="121.1" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="87.9" cy="136.0" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="90.5" cy="138.2" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="90.7" cy="140.6" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="97.8" cy="142.5" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="78.2" cy="145.8" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="65.4" cy="164.0" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="62.5" cy="141.6" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="118.9" cy="147.6" r="2.2" fill="#ff7a8a" fill-opacity="0.8"/><circle cx="140.9" cy="115.7" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="113.4" cy="147.9" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="107.6" cy="137.6" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="115.4" cy="132.4" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="131.8" cy="127.0" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="130.4" cy="132.8" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="142.4" cy="106.7" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="134.0" cy="116.1" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="120.7" cy="118.3" r="2.2" fill="#feca57" fill-opacity="0.8"/><circle cx="207.9" cy="109.0" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="190.5" cy="94.1" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="166.9" cy="107.8" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="152.2" cy="123.7" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="194.0" cy="74.2" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="171.2" cy="118.0" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="205.5" cy="87.5" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="160.6" cy="109.4" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="202.6" cy="55.6" r="2.2" fill="#4fd1a5" fill-opacity="0.8"/><circle cx="215.8" cy="88.4" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="196.4" cy="77.5" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="208.2" cy="70.8" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="197.2" cy="76.0" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="237.5" cy="98.1" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="199.1" cy="90.6" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="195.6" cy="97.7" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="239.8" cy="76.8" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="218.8" cy="94.4" r="2.2" fill="#48dbfb" fill-opacity="0.8"/><circle cx="247.4" cy="65.6" r="2.2" fill="#a29bfe" fill-opacity="0.8"/><circle cx="274.6" cy="46.4" r="2.2" fill="#a29bfe" fill-opacity="0.8"/><circle cx="243.0" cy="61.2" r="2.2" fill="#a29bfe" fill-opacity="0.8"/><circle cx="252.2" cy="67.9" r="2.2" fill="#a29bfe" fill-opacity="0.8"/><circle cx="294.3" cy="46.2" r="2.2" fill="#a29bfe" fill-opacity="0.8"/><circle cx="289.1" cy="35.8" r="2.2" fill="#a29bfe" fill-opacity="0.8"/><circle cx="248.6" cy="47.1" r="2.2" fill="#a29bfe" fill-opacity="0.8"/><circle cx="274.5" cy="67.3" r="2.2" fill="#a29bfe" fill-opacity="0.8"/><circle cx="242.0" cy="77.3" r="2.2" fill="#a29bfe" fill-opacity="0.8"/>
+        <line x1="52" y1="164" x2="290" y2="45" stroke="#e7ebf3" stroke-opacity=".5" stroke-width="1.4"/>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11" fill="#c9d1e0"><text x="168" y="190" text-anchor="middle">M<tspan baseline-shift="sub" font-size="8">*</tspan>, M<tspan baseline-shift="sub" font-size="8">bul</tspan>, R<tspan baseline-shift="sub" font-size="8">d</tspan> (photometry)</text><text x="22" y="96" text-anchor="middle" transform="rotate(-90 22 96)">M, R (fit)</text><text x="56" y="34">Sa</text><text x="80" y="34" fill="#feca57">Sb</text><text x="104" y="34" fill="#4fd1a5">Sc</text><text x="128" y="34" fill="#48dbfb">Sd</text><text x="152" y="34" fill="#a29bfe">Im</text></g>
+      </svg>
+      <div class="body">
+        <h2>CL fits vs photometry</h2>
+        <p>The fitted M and R against what the fits never saw: stellar, bulge and baryonic mass and the disc scale length, with Hubble type and surface brightness as colour, and controls for correlations built into the fit.</p>
+        <div class="tags"><span>choose both axes</span><span>colour by type or SB</span><span>fit category vs morphology</span></div>
+        <span class="open">Open the explorer</span>
+      </div>
+    </a>
+
+    <a class="card" href="models/cl_scaling_interactive.html">
+      <svg class="art" viewBox="0 0 320 200" role="img" aria-label="Central velocity gradient against central surface brightness, with the Lelli slope range, and a rotation curve with its prediction from the light">
+        <rect width="320" height="200" fill="#03050b"/>
+        <path d="M30 20 V172 H190" fill="none" stroke="#97a2b9" stroke-opacity=".45"/>
+        <polygon points="34,160 186,58 186,26 34,168" fill="#5fd38a" fill-opacity=".14"/>
+        <circle cx="128.5" cy="87.1" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="173.8" cy="29.8" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="145.1" cy="78.2" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="106.1" cy="104.3" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="174.0" cy="36.3" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="56.1" cy="122.3" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="106.6" cy="105.7" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="121.5" cy="110.0" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="41.9" cy="158.1" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="170.1" cy="66.1" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="148.7" cy="85.0" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="59.7" cy="161.5" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="127.7" cy="89.5" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="163.7" cy="61.4" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="69.7" cy="142.1" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="163.9" cy="96.8" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="81.1" cy="141.0" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="136.3" cy="78.4" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="69.1" cy="153.2" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="177.3" cy="43.0" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="166.9" cy="54.6" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="63.6" cy="150.7" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="60.7" cy="151.3" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="125.6" cy="94.9" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="40.5" cy="151.8" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="84.0" cy="112.4" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="156.2" cy="55.4" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="108.3" cy="105.4" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="140.1" cy="112.4" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="43.2" cy="167.2" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="146.5" cy="75.7" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="151.9" cy="68.0" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="92.0" cy="115.2" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="46.6" cy="151.3" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="65.7" cy="145.5" r="2" fill="#e7ebf3" fill-opacity="0.55"/><circle cx="147.3" cy="71.2" r="2" fill="#e7ebf3" fill-opacity="0.55"/>
+        <circle cx="70" cy="142" r="3" fill="none" stroke="#ff7b7b" stroke-width="1.4"/><circle cx="150" cy="70" r="3" fill="none" stroke="#ff7b7b" stroke-width="1.4"/><circle cx="168" cy="62" r="3" fill="none" stroke="#ff7b7b" stroke-width="1.4"/>
+        <line x1="34" y1="166" x2="186" y2="48" stroke="#f2a24a" stroke-width="2"/>
+        <circle cx="118" cy="101" r="5" fill="#f2a24a"/>
+        <g transform="translate(204 40)">
+          <rect width="104" height="104" rx="6" fill="#0d1220" stroke="#222c42"/>
+          <path d="M10 92 L24 48 C 30 34, 40 30, 52 28 S 80 26, 96 26" fill="none" stroke="#f2a24a" stroke-width="2"/>
+          <path d="M10 92 L22 54 C 30 38, 44 34, 60 33 S 84 32, 96 32" fill="none" stroke="#f2a24a" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <g fill="#e7ebf3"><circle cx="18" cy="66" r="1.8"/><circle cx="26" cy="46" r="1.8"/><circle cx="36" cy="34" r="1.8"/><circle cx="48" cy="30" r="1.8"/><circle cx="60" cy="28" r="1.8"/><circle cx="72" cy="29" r="1.8"/><circle cx="84" cy="27" r="1.8"/><circle cx="94" cy="28" r="1.8"/></g>
+        </g>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11" fill="#c9d1e0"><text x="110" y="190" text-anchor="middle">central surface brightness</text><text x="16" y="96" text-anchor="middle" transform="rotate(-90 16 96)">d<tspan baseline-shift="sub" font-size="8">R</tspan>V(0)</text><text x="256" y="162" text-anchor="middle">fit and prediction</text></g>
+      </svg>
+      <div class="body">
+        <h2>CL fits and the Lelli relation</h2>
+        <p>The central velocity gradient against central surface brightness (Lelli et al. 2013) for 131 galaxies, with the measured secant, the CL gradient and an arctan control, and for each galaxy the rotation curve predicted from its baryonic data alone.</p>
+        <div class="tags"><span>three gradients, three proxies</span><span>prediction from M<sub>bar</sub> and Σ<sub>in</sub></span><span>inner-rise zoom</span></div>
+        <span class="open">Open the explorer</span>
+      </div>
+    </a>
+  </div>
+
   <section class="about">
     <div>
       <h3>About these models</h3>
       <p>The galaxy models use the constant-Lagrangian metric-inflow picture: the bulge sets an inflow of space whose orbital and radial channels add up to a constant v<sub>L</sub>², and spiral arms are streamlines of that flow. The jet models use the three-rapidity Painlevé–Gullstrand metric, in which flow lines lie on cones of fixed polar angle. The riverbed model shows how space cells are created and absorbed, and how the active riverbed moves matter.</p>
       <p>Each model separates what is imposed by observation, calibrated, derived from the geometry, or interpretive, and states its display conventions (for example, jet cones drawn wider than their true angle so the helices are visible).</p>
+      <p>The SPARC explorers use the SPARC database (Lelli, McGaugh &amp; Schombert 2016) and the single-Lagrangian CL fits. Their numbers can be reproduced with the code and data in <a href="https://github.com/haas2u-ai/bq-galaxy-models/tree/main/SPARC-CL-scaling">SPARC-CL-scaling</a>, archived at <a href="https://doi.org/10.5281/zenodo.23340027">doi:10.5281/zenodo.23340027</a>.</p>
     </div>
     <div>
       <h3>Papers</h3>
@@ -181,13 +247,15 @@ footer a{color:var(--soft)}
         <li>E.P.J. de Haas, <i>J. High Energy Phys. Gravit. Cosmol.</i> 11 (2025), <a href="https://doi.org/10.4236/jhepgc.2025.114097">doi:10.4236/jhepgc.2025.114097</a></li>
         <li>E.P.J. de Haas, <i>J. High Energy Phys. Gravit. Cosmol.</i> 12 (2026), <a href="https://doi.org/10.4236/jhepgc.2026.121022">doi:10.4236/jhepgc.2026.121022</a></li>
         <li>E.P.J. de Haas (2025), Jet collimation, helical geometry and UHECR acceleration from a single PG metric, <a href="https://doi.org/10.5281/zenodo.17681340">doi:10.5281/zenodo.17681340</a></li>
+        <li>Code and data for the SPARC scaling tests: E.P.J. de Haas (2026), <a href="https://doi.org/10.5281/zenodo.23340027">doi:10.5281/zenodo.23340027</a></li>
+        <li>Central gradient–surface brightness relation: F. Lelli, F. Fraternali &amp; M. Verheijen, <i>Mon. Not. R. Astron. Soc.</i> 433, L30 (2013), <a href="https://doi.org/10.1093/mnrasl/slt053">doi:10.1093/mnrasl/slt053</a></li>
         <li>Observational context for M 87: K. Hada et al., <i>Astron. Astrophys. Rev.</i> 32, 5 (2024), <a href="https://doi.org/10.1007/s00159-024-00155-y">doi:10.1007/s00159-024-00155-y</a></li>
       </ul>
     </div>
   </section>
 
   <footer>
-    <a href="index.html">Videos and overview</a> · The models are single self-contained HTML files and also run offline. Source: <a href="https://github.com/haas2u-ai/bq-galaxy-models">github.com/haas2u-ai/bq-galaxy-models</a> · Rendering with three.js (MIT License).
+    <a href="index.html">Videos and overview</a> · The models are single self-contained HTML files and also run offline. Source: <a href="https://github.com/haas2u-ai/bq-galaxy-models">github.com/haas2u-ai/bq-galaxy-models</a> · The 3D models render with three.js (MIT License).
   </footer>
 </main>
 </body>
