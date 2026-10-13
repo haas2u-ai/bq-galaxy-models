@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The riverbed of space — interactive model (E.P.J. de Haas)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  --space:#05070d; --panel:#0f1524; --panel-edge:#222c42; --ink:#e7ebf3; --ink-soft:#8f9ab2;
+  --accent:#48dbfb; --amber:#f2a24a; --green:#2ecc71; --red:#ff6b6b; --gold:#feca57; --warn:#ffcc66;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --math:"Source Serif 4","STIX Two Text","Times New Roman",serif;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){ --panel:#f4f6fb; --panel-edge:#cfd6e4; --ink:#141a28; --ink-soft:#56617a; --accent:#0f7fb0; --amber:#b8620f; --green:#1e8e4e; --red:#c0392b; --gold:#9a6a00; --warn:#9a6200; }
+}
+:root[data-theme="dark"]{ --panel:#0f1524; --panel-edge:#222c42; --ink:#e7ebf3; --ink-soft:#8f9ab2; --accent:#48dbfb; --amber:#f2a24a; --green:#2ecc71; --red:#ff6b6b; --gold:#feca57; --warn:#ffcc66; }
+:root[data-theme="light"]{ --panel:#f4f6fb; --panel-edge:#cfd6e4; --ink:#141a28; --ink-soft:#56617a; --accent:#0f7fb0; --amber:#b8620f; --green:#1e8e4e; --red:#c0392b; --gold:#9a6a00; --warn:#9a6200; }
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--space);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.45;overflow:hidden;-webkit-font-smoothing:antialiased}
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 380px}
+#stage{position:relative;min-width:0;height:100%;background:var(--space);touch-action:none;overflow:hidden;cursor:grab}
+#stage:active{cursor:grabbing}
+#view{display:block;width:100%;height:100%}
+.hud{position:absolute;pointer-events:none;color:#e7ebf3}
+.title{left:22px;top:18px;max-width:min(620px,70%)}
+.title h1{margin:0;font-weight:600;font-size:clamp(19px,2.2vw,28px);line-height:1.15;letter-spacing:-0.01em}
+.title p{margin:.3em 0 0;color:#9aa6bf;font-size:13.5px}
+.legend{left:22px;bottom:20px;font-size:13px;line-height:1.7;color:#c9d1e0}
+.legend span{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.counts{right:20px;top:18px;font-variant-numeric:tabular-nums;font-size:13px;line-height:1.55;text-align:right;color:#c9d1e0;
+  background:rgba(16,21,31,.8);border:1px solid #2c3445;border-radius:8px;padding:8px 12px}
+.caption{left:50%;bottom:22px;transform:translateX(-50%);max-width:min(720px,70%);text-align:center;font-size:14.5px;
+  background:rgba(16,21,31,.9);border:1px solid #2c3445;border-radius:8px;padding:8px 14px;opacity:0;transition:opacity .3s}
+.caption.on{opacity:1}
+aside{height:100%;overflow-y:auto;background:var(--panel);border-left:1px solid var(--panel-edge);padding:20px 22px 28px}
+aside h2{font-size:16px;font-weight:600;margin:0 0 10px}
+section{padding:16px 0;border-top:1px solid var(--panel-edge)}
+section:first-of-type{border-top:0;padding-top:0}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;font-size:13.5px;color:var(--ink);background:transparent;border:1px solid var(--panel-edge);border-radius:6px;padding:6px 11px;cursor:pointer}
+button:hover{border-color:var(--ink-soft)}
+button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#03141c;font-weight:500}
+button:disabled{opacity:.4;cursor:default}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.steps{display:grid;grid-template-columns:1fr;gap:6px;margin-top:10px}
+.steps button{text-align:left}
+.ctl{margin:0 0 12px}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;margin-bottom:3px}
+.ctl label>span{min-width:0}
+.ctl output{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-size:13.5px;white-space:nowrap}
+input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0}
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:14px}
+.toggles label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.eq{font-family:var(--math);font-style:italic;font-size:15px;margin:2px 0 8px;line-height:1.55}
+.readout{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:13.5px;margin:6px 0 0}
+.readout dt{color:var(--ink-soft)}.readout dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.plotlabel{font-size:13px;color:var(--ink-soft);margin:10px 0 2px}
+canvas.plot{width:100%;height:118px;display:block}
+.note{font-size:12.5px;color:var(--ink-soft)}
+.note p{margin:0 0 7px}
+.sheet-toggle{display:none}
+@media (max-width: 880px){
+  .app{grid-template-columns:1fr}
+  aside{position:fixed;left:0;right:0;bottom:0;height:auto;max-height:64%;border-left:0;border-top:1px solid var(--panel-edge);
+    border-radius:14px 14px 0 0;transform:translateY(calc(100% - 52px));transition:transform .28s ease;
+    padding-bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:5}
+  aside.open{transform:translateY(0)}
+  .sheet-toggle{display:block;width:100%;margin:-6px 0 14px;text-align:center}
+  .title p{display:none}.legend{bottom:66px;left:14px}.counts{top:48px;bottom:auto;right:12px;font-size:11.5px;padding:6px 9px}.title{left:14px;top:12px}
+  .caption{bottom:120px;max-width:90%}
+}
+@media (prefers-reduced-motion: reduce){ aside{transition:none} .caption{transition:none} }
+</style>
+</head>
+<body>
+<div class="app">
+  <div id="stage" aria-label="Animated model of space cells and the riverbed of space around a galaxy. Drag to rotate, scroll or pinch to zoom.">
+    <canvas id="view"></canvas>
+    <div class="hud title">
+      <h1>The riverbed of space</h1>
+      <p>Space cells are created everywhere and absorbed only in matter; the active riverbed carries matter into the constant-Lagrangian spiral</p>
+    </div>
+    <div class="hud counts" id="counts"></div>
+    <div class="hud legend" id="legend"></div>
+    <div class="hud caption" id="caption" aria-live="polite"></div>
+  </div>
+
+  <aside id="panel">
+    <button class="sheet-toggle" id="sheetToggle" aria-expanded="false">Show model controls</button>
+    <section>
+      <h2>Build it up</h2>
+      <div class="btns"><button class="primary" id="bTour">Play tour</button><button id="bStop">Stop tour</button><button id="bReset">Reset</button></div>
+      <div class="steps">
+        <button id="sMass" aria-pressed="false">1 · Switch on the mass M (influence spreads at c)</button>
+        <button id="sChain">2 · Send a replacement chain toward M</button>
+        <button id="sSpiral" aria-pressed="false">3 · Add the azimuthal flow (CL spiral)</button>
+        <button id="sCentre">Re-centre on a random cell (no mass: Hubble has no centre)</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Model</h2>
+      <p class="eq">creation 3H per cell · riverbed v<sub>r</sub> = √(2GM/r) − Hr · v<sub>φ</sub>² + v<sub>r</sub>² = v<sub>L</sub>²</p>
+      <div class="ctl"><label for="rb"><span>Bulge radius R (matter)</span> <output id="rbOut"></output></label><input id="rb" type="range" min="0.05" max="0.3" step="0.01" value="0.12"></div>
+      <div class="ctl"><label for="ru"><span>Absorption rate Q → drift balance radius</span> <output id="ruOut"></output></label><input id="ru" type="range" min="0.13" max="0.6" step="0.01" value="0.25"></div>
+      <dl class="readout">
+        <dt>Riverbed balance r<sub>c</sub> = (2GM/H²)<sup>1/3</sup></dt><dd>1.00 r<sub>c</sub></dd>
+        <dt>Cell-drift balance (Q/4πH)<sup>1/3</sup></dt><dd id="rRu"></dd>
+        <dt>Riverbed speed v<sub>L</sub> outside R</dt><dd id="rVL"></dd>
+        <dt>Drift / riverbed at R</dt><dd id="rRatio"></dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>View</h2>
+      <div class="ctl"><label for="zoom"><span>Field of view</span> <output id="zoomOut"></output></label><input id="zoom" type="range" min="0.3" max="2" step="0.01" value="1.6"></div>
+      <div class="ctl"><label for="tilt"><span>Tilt</span> <output id="tiltOut"></output></label><input id="tilt" type="range" min="0" max="75" step="1" value="35"></div>
+      <div class="ctl"><label for="speed"><span>Flow speed (display)</span> <output id="speedOut"></output></label><input id="speed" type="range" min="0" max="3" step="0.05" value="1"></div>
+      <div class="ctl"><label for="cspd"><span>Speed of the influence front (display c)</span> <output id="cspdOut"></output></label><input id="cspd" type="range" min="2" max="20" step="0.5" value="4.5"></div>
+      <div class="toggles">
+        <label><input type="checkbox" id="tCells" checked> Space cells</label>
+        <label><input type="checkbox" id="tMatter" checked> Matter</label>
+        <label><input type="checkbox" id="tFlash" checked> Flashes</label>
+        <label><input type="checkbox" id="tRings" checked> Rings & arms</label>
+        <label><input type="checkbox" id="tRotate" checked> Auto-rotate</label>
+      </div>
+      <p class="plotlabel">Velocities (outward positive): grey dashed cell drift · orange riverbed · blue v<sub>φ</sub></p>
+      <canvas class="plot" id="pVel" aria-label="Velocity profiles"></canvas>
+      <p class="plotlabel" id="lab2"></p>
+      <canvas class="plot" id="pFlux" aria-label="Cell budget or flux"></canvas>
+      <p class="plotlabel" id="lab3"></p>
+      <canvas class="plot" id="pAcc" aria-label="Acceleration or pitch"></canvas>
+    </section>
+
+    <section class="note">
+      <h2 style="color:var(--ink)">About this model</h2>
+      <p><b>Space cells</b> are created at random, 3H per cell, and absorbed only inside the matter (M, R). Space is incompressible, so each absorbed cell is replaced by its neighbours: a slow drift u = Q/(4πr²) − Hr whose net inward flux diminishes outward.</p>
+      <p><b>The riverbed</b> v<sub>r</sub> = √(2GM/r) − Hr is the active fraction of space that moves matter, as inertia couples a body to the space it moves through. It is not the cell drift. Its convective acceleration gives −GM/r². The influence of M on space spreads at c.</p>
+      <p><b>The spiral riverbed</b> adds v<sub>φ</sub>² = 3/2 X² − v<sub>r</sub>², so the riverbed speed is the same everywhere outside R: no acceleration along the flow, only turning (v<sub>L</sub>·ω). At r<sub>c</sub> the spiral becomes a circle: inside, spirals wind toward it; outside, they unwind away.</p>
+      <p>Schematic units: r<sub>c</sub> = 1, time in 1/H. The absorption rate Q is a free input; c is slowed for display. In real galaxies r<sub>c</sub> ≈ 100–260 kpc, far outside the disk. Cells live in a ±12° equatorial wedge, matter in the disk plane.</p>
+      <p>E.P.J. de Haas — constant-Lagrangian metric-inflow model. <a href="https://github.com/haas2u-ai/bq-galaxy-models/tree/main/bq-video-scripts" style="color:var(--accent)">Python scripts</a> · <a href="landing.html" style="color:var(--accent)">videos and models</a></p>
+    </section>
+  </aside>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// ---------------- physics (schematic units: H = 1, 2GM = 1, r_c = 1) ----------------
+const H=1, GM2=1, GM=0.5, LAT=12*Math.PI/180;
+const P={RB:0.12, RU:0.25, X:0, Q4:0, AABS:0};
+function derive(){ P.X=Math.sqrt(GM2/P.RB)-H*P.RB; P.Q4=H*Math.pow(P.RU,3); P.AABS=3*P.Q4/Math.pow(P.RB,3); }
+function vInCL(r){ return r<=P.RB ? Math.sqrt(GM/P.RB*(3-(r/P.RB)*(r/P.RB)))-H*r : Math.sqrt(GM2/r)-H*r; }   // inward positive
+function vRiver(r){ return -vInCL(r); }                                                                        // outward positive
+function vPhi(r){ const q = r<=P.RB ? 0.5*P.X*P.X*(r/P.RB)*(r/P.RB) : 1.5*P.X*P.X - Math.pow(vInCL(r),2); return q>0?Math.sqrt(q):0; }
+function vSpace(r,mass){ if(!mass) return H*r; return r<=P.RB ? H*r - P.Q4*r/Math.pow(P.RB,3) : H*r - P.Q4/(r*r); }
+function influx(r){ return (r<=P.RB ? P.Q4*Math.pow(r/P.RB,3) : P.Q4) - H*r*r*r; }
+
+// ---------------- state ----------------
+const S={mass:false, tOn:0, spiral:0, spiralTarget:0, time:0, Rd:1.6, tRd:1.6, centre:null, centreW:0};
+const NT=5200, NM=650;
+let cr=[],cp=[],cl=[],ch=[], mr=[],mp=[], flashes=[];
+let rateC=0, rateA=0;
+const rnd=Math.random;
+function sampleCell(R0,R1){ const u=rnd(), r=Math.cbrt(R0*R0*R0+u*(R1*R1*R1-R0*R0*R0)); return [r, 2*Math.PI*rnd(), Math.asin(Math.sin(LAT)*(2*rnd()-1))]; }
+function init(){
+  cr=[];cp=[];cl=[];ch=[];
+  for(let i=0;i<NT;i++){ const c=sampleCell(0.01,S.Rd); cr.push(c[0]); cp.push(c[1]); cl.push(c[2]); ch.push(false); }
+  mr=[];mp=[]; for(let i=0;i<NM;i++){ mr.push(1.6*Math.sqrt(rnd())); mp.push(2*Math.PI*rnd()); }
+  flashes=[];
+}
+function front(){ return S.mass ? (+$("cspd").value)*(S.time-S.tOn) : -1; }
+function step(dt){
+  S.time+=dt;
+  // space cells: incompressible slow drift
+  for(let i=0;i<cr.length;i++){ const v=vSpace(cr[i],S.mass); const rm=Math.max(cr[i]+0.5*dt*v,1e-3); cr[i]=Math.max(cr[i]+dt*vSpace(rm,S.mass),1e-3); }
+  // creation: random isotropic insertion, 3H per cell
+  const lam=3*H*dt*cr.length; let nc=Math.floor(lam); if(rnd()<lam-nc) nc++;
+  for(let k=0;k<nc;k++){ const c=sampleCell(0.01,S.Rd); cr.push(c[0]); cp.push(c[1]); cl.push(c[2]); ch.push(false); flashes.push([c[0],c[1],c[2],0,0]); }
+  // absorption: only inside the matter
+  let na=0;
+  if(S.mass){ const pa=1-Math.exp(-P.AABS*dt);
+    for(let i=cr.length-1;i>=0;i--){ if(cr[i]<=P.RB && rnd()<pa){ flashes.push([cr[i],cp[i],cl[i],0,1]); na++; remove(i); } } }
+  for(let i=cr.length-1;i>=0;i--) if(cr[i]>S.Rd) remove(i);
+  // display normalisation (zoom changes only re-sample the uniform state)
+  if(cr.length<0.93*NT){ const k=NT-cr.length; for(let j=0;j<k;j++){ const c=sampleCell(0.01,S.Rd); cr.push(c[0]); cp.push(c[1]); cl.push(c[2]); ch.push(false); } }
+  else if(cr.length>1.07*NT){ while(cr.length>NT){ const i=Math.floor(rnd()*cr.length); if(!ch[i]) remove(i); } }
+  rateC=0.92*rateC+0.08*(nc/dt/Math.max(cr.length,1)); rateA=0.92*rateA+0.08*(na/dt/Math.max(cr.length,1));
+  // matter: riverbed behind the influence front, Hubble flow ahead of it
+  const F=front();
+  for(let i=0;i<mr.length;i++){
+    for(let s=0;s<2;s++){ const h=dt/2, behind=mr[i]<F, vr=behind?vRiver(mr[i]):H*mr[i];
+      mr[i]=Math.max(mr[i]+h*vr,1e-3); if(S.spiral>0&&behind) mp[i]+=h*S.spiral*vPhi(mr[i])/mr[i]; }
+    if(mr[i]<0.015||mr[i]>1.65){ mr[i]= rnd()<0.5 ? 1.6*Math.sqrt(rnd()) : 1.55+0.05*rnd(); mp[i]=2*Math.PI*rnd(); }
+  }
+  for(let i=flashes.length-1;i>=0;i--){ flashes[i][3]+=1; if(flashes[i][3]>(flashes[i][4]?14:8)) flashes.splice(i,1); }
+  if(flashes.length>1600) flashes.splice(0,flashes.length-1600);
+}
+function remove(i){ const L=cr.length-1; cr[i]=cr[L];cp[i]=cp[L];cl[i]=cl[L];ch[i]=ch[L]; cr.pop();cp.pop();cl.pop();ch.pop(); }
+function seedChain(){
+  if(!S.mass) return;
+  const r0=P.RB*1.08, r1=Math.min(P.RU*0.98, S.Rd*0.95); if(r1<=r0) return;
+  const p=2*Math.PI*rnd();
+  for(let k=0;k<14;k++){ cr.push(r0+(r1-r0)*k/13); cp.push(p); cl.push(0); ch.push(true); }
+}
+// CL streamlines (arms): inner from R to r_c, outer from 1.6 r_c inward to r_c
+function arm(a,b,n){ const R=[],F=[]; let phi=0;
+  for(let k=0;k<=n;k++){ const r=a+(b-a)*k/n; if(k>0){ const r0=a+(b-a)*(k-1)/n, f=x=>-vPhi(x)/(x*(Math.abs(vInCL(x))<1e-6?1e-6:vInCL(x))); phi+=0.5*(f(r)+f(r0))*(r-r0); } R.push(r); F.push(phi); }
+  return [R,F]; }
+let ARMS=null; function buildArms(){ ARMS=[arm(P.RB,0.995,600), arm(1.6,1.005,400)]; }
+
+// ---------------- drawing ----------------
+const cv=$("view"), g=cv.getContext("2d");
+let W=0,Hh=0,DPR=1, az=0, tAz=0, dragging=null;
+function resize(){ DPR=Math.min(window.devicePixelRatio,2); W=cv.clientWidth; Hh=cv.clientHeight; cv.width=Math.round(W*DPR); cv.height=Math.round(Hh*DPR); drawPlots(); }
+window.addEventListener("resize",resize);
+function proj(x,y,z,tilt){
+  const ca=Math.cos(az), sa=Math.sin(az), xr=x*ca-y*sa, yr=x*sa+y*ca;
+  const sc=Math.min(W,Hh)*0.46/S.Rd, ct=Math.cos(tilt), st=Math.sin(tilt);
+  return [W*0.5+sc*xr, Hh*0.54+sc*(yr*ct - z*st)];
+}
+function ring(rad,col,dash,tilt,width){ if(rad>S.Rd*1.15) return; g.beginPath(); for(let k=0;k<=96;k++){ const a=2*Math.PI*k/96, p=proj(rad*Math.cos(a)-off[0],rad*Math.sin(a)-off[1],0,tilt); k?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]); }
+  g.strokeStyle=col; g.setLineDash(dash||[]); g.lineWidth=width||1.5; g.stroke(); g.setLineDash([]); }
+let off=[0,0,0];
+function xyz(r,p,l){ const c=r*Math.cos(l); return [c*Math.cos(p), c*Math.sin(p), r*Math.sin(l)]; }
+function draw(){
+  g.setTransform(DPR,0,0,DPR,0,0); g.fillStyle="#05070d"; g.fillRect(0,0,W,Hh);
+  const tilt=(+$("tilt").value)*Math.PI/180;
+  // re-centring offset (only without mass)
+  off=[0,0,0];
+  if(S.centre!==null && !S.mass){ const i=Math.min(S.centre,cr.length-1); const P3=xyz(cr[i],cp[i],cl[i]); off=[P3[0]*S.centreW,P3[1]*S.centreW,P3[2]*S.centreW]; }
+  if($("tCells").checked){
+    g.fillStyle="rgba(170,182,204,0.55)";
+    for(let i=0;i<cr.length;i++){ if(ch[i]) continue; const q=xyz(cr[i],cp[i],cl[i]), p=proj(q[0]-off[0],q[1]-off[1],q[2]-off[2],tilt); g.fillRect(p[0]-0.8,p[1]-0.8,1.6,1.6); }
+    g.fillStyle="#48dbfb";
+    for(let i=0;i<cr.length;i++){ if(!ch[i]) continue; const q=xyz(cr[i],cp[i],cl[i]), p=proj(q[0],q[1],q[2],tilt); g.beginPath(); g.arc(p[0],p[1],3.2,0,2*Math.PI); g.fill(); }
+  }
+  if($("tFlash").checked){
+    for(const f of flashes){ const q=xyz(f[0],f[1],f[2]), p=proj(q[0]-off[0],q[1]-off[1],q[2]-off[2],tilt), life=f[4]?14:8, a=1-f[3]/life;
+      g.fillStyle=f[4]?`rgba(255,107,107,${a})`:`rgba(46,204,113,${a})`; g.beginPath(); g.arc(p[0],p[1],f[4]?3.4:2.4,0,2*Math.PI); g.fill(); }
+  }
+  if($("tRings").checked){
+    if(S.mass){ ring(P.RB,"#fff0cf",null,tilt,1.6); ring(P.RU,"#8f9ab2",[2,4],tilt,1.2); }
+    if(S.mass && (S.spiral>0.05 || S.Rd>0.8)) ring(1.0,"#feca57",[8,5],tilt,1.6);
+    const F=front(); if(S.mass && F>0 && F<S.Rd*1.15) ring(F,"#ffffff",[5,5],tilt,1.3);
+    if(S.spiral>0.05 && ARMS){ g.strokeStyle=`rgba(255,184,107,${0.85*S.spiral})`; g.lineWidth=1.8;
+      for(const A of ARMS) for(const o of [0,Math.PI]){ g.beginPath(); for(let k=0;k<A[0].length;k++){ const r=A[0][k], ph=A[1][k]+o; if(r>S.Rd*1.15) continue; const p=proj(r*Math.cos(ph),r*Math.sin(ph),0,tilt); k?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]); } g.stroke(); } }
+  }
+  if($("tMatter").checked && S.mass){
+    g.fillStyle="#ffb86b";
+    for(let i=0;i<mr.length;i++){ if(mr[i]>S.Rd) continue; const p=proj(mr[i]*Math.cos(mp[i]),mr[i]*Math.sin(mp[i]),0,tilt); g.beginPath(); g.arc(p[0],p[1],2.2,0,2*Math.PI); g.fill(); }
+    const c=proj(0,0,0,tilt); g.fillStyle="#fff0cf"; g.beginPath(); g.arc(c[0],c[1],4.5,0,2*Math.PI); g.fill();
+  }
+  if(S.centre!==null && !S.mass){ const p=proj(0,0,0,tilt); g.strokeStyle="#48dbfb"; g.lineWidth=2; g.beginPath(); g.arc(p[0],p[1],9,0,2*Math.PI); g.stroke(); }
+}
+
+// ---------------- plots ----------------
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function prep(c){ const r=c.getBoundingClientRect(), d=Math.min(window.devicePixelRatio,2); if(c.width!==Math.round(r.width*d)){ c.width=Math.round(r.width*d); c.height=Math.round(r.height*d); }
+  const x=c.getContext("2d"); x.setTransform(d,0,0,d,0,0); x.clearRect(0,0,r.width,r.height); return [x,r.width,r.height]; }
+function plot(c,fns,xmax,ymin,ymax,marks){
+  const [x,w,h]=prep(c); const X=r=>r/xmax*w, Y=v=>h-(v-ymin)/(ymax-ymin)*h;
+  x.strokeStyle=css("--panel-edge"); x.lineWidth=1; x.beginPath(); x.moveTo(0,Y(0)); x.lineTo(w,Y(0)); x.stroke();
+  (marks||[]).forEach(([r,col])=>{ x.strokeStyle=col; x.setLineDash([3,3]); x.beginPath(); x.moveTo(X(r),0); x.lineTo(X(r),h); x.stroke(); x.setLineDash([]); });
+  fns.forEach(([f,col,dash,lo])=>{ x.strokeStyle=col; x.lineWidth=2; x.setLineDash(dash||[]); x.beginPath(); let first=true;
+    for(let k=0;k<=220;k++){ const r=(lo||0.02)+(xmax-(lo||0.02))*k/220, v=f(r); if(!isFinite(v)){ first=true; continue; } const yy=Math.min(h+5,Math.max(-5,Y(v))); first?x.moveTo(X(r),yy):x.lineTo(X(r),yy); first=false; }
+    x.stroke(); x.setLineDash([]); });
+  x.fillStyle=css("--ink-soft"); x.font="10.5px "+css("--sans"); x.fillText("r / r_c → "+xmax.toFixed(1),w-62,h-4);
+}
+function drawPlots(){
+  const amber=css("--amber"), soft=css("--ink-soft"), acc=css("--accent"), gold=css("--gold"), green=css("--green"), red=css("--red"), ink=css("--ink");
+  plot($("pVel"),[[r=>vSpace(r,S.mass),soft,[5,4]], ...(S.mass?[[r=>vRiver(r),amber]]:[]), ...(S.spiral>0.05?[[r=>S.spiral*vPhi(r),acc]]:[])],1.6,-3.8,3.8,
+       S.mass?[[1,gold],[P.RU,soft]]:[]);
+  if(!S.mass||S.Rd>0.8&&S.spiral<0.05&&false){}
+  if(S.spiral>0.05){
+    $("lab2").innerHTML="Riverbed speed |v| = √(v<sub>r</sub>² + v<sub>φ</sub>²): constant v<sub>L</sub> outside R";
+    plot($("pFlux"),[[r=>Math.hypot(vRiver(r),S.spiral*vPhi(r)),ink],[r=>Math.sqrt(1.5)*P.X,gold,[4,4]]],1.6,0,4.2,[[P.RB,soft]]);
+    $("lab3").innerHTML="Spiral pitch tan α = |v<sub>r</sub>|/v<sub>φ</sub> (degrees): α → 0 at r<sub>c</sub>";
+    plot($("pAcc"),[[r=>Math.atan(Math.abs(vRiver(r))/Math.max(vPhi(r),1e-6))*180/Math.PI,ink]],1.6,0,60,[[1,gold]]);
+  } else if(S.mass){
+    $("lab2").innerHTML="Net inward flux of space ×1/4π: absorbed in R minus created within r";
+    plot($("pFlux"),[[r=>influx(r),ink]],0.6,-0.03,Math.max(0.02,P.Q4*1.3),[[P.RB,soft],[P.RU,soft]]);
+    $("lab3").innerHTML="Riverbed convective acceleration v dv/dr (white) vs H²r − GM/r² − ½H√(2GM/r) (dashed)";
+    plot($("pAcc"),[[r=>{ const h=1e-4; return vRiver(r)*(vRiver(r+h)-vRiver(r-h))/(2*h); },ink,null,P.RB*1.05],[r=>H*H*r-GM/(r*r)-0.5*H*Math.sqrt(GM2/r),gold,[4,4]]],1.6,-14,2,[[1,gold]]);
+  } else {
+    $("lab2").innerHTML="Cell budget per cell and unit time: creation 3H everywhere";
+    plot($("pFlux"),[[r=>3*H,green]],1.6,-1,6,[]);
+    $("lab3").innerHTML="Hubble’s law: relative velocity = H × separation, from every cell";
+    plot($("pAcc"),[[r=>H*r,ink]],1.6,-0.2,1.8,[]);
+  }
+}
+
+// ---------------- UI ----------------
+function readUI(){
+  P.RB=+$("rb").value; P.RU=Math.max(+$("ru").value, P.RB+0.01); derive(); buildArms();
+  $("rbOut").textContent=P.RB.toFixed(2)+" r_c"; $("ruOut").textContent=P.RU.toFixed(2)+" r_c";
+  $("rRu").textContent=P.RU.toFixed(2)+" r_c"; $("rVL").textContent=(Math.sqrt(1.5)*P.X).toFixed(2)+" (H r_c)";
+  $("rRatio").textContent=(Math.abs(vSpace(P.RB,true))/Math.abs(vRiver(P.RB))).toFixed(2);
+  S.tRd=+$("zoom").value; $("zoomOut").textContent="r ≤ "+S.tRd.toFixed(2)+" r_c"; $("tiltOut").textContent=$("tilt").value+"°";
+  $("speedOut").textContent=(+$("speed").value).toFixed(2)+"×"; $("cspdOut").textContent=(+$("cspd").value).toFixed(1)+" r_c per 1/H";
+  drawPlots();
+}
+["rb","ru","zoom","tilt","speed","cspd"].forEach(id=>$(id).addEventListener("input",readUI));
+function setMass(on){ S.mass=on; S.tOn=S.time; $("sMass").setAttribute("aria-pressed",on); $("sMass").textContent=on?"1 · Switch off the mass M":"1 · Switch on the mass M (influence spreads at c)";
+  $("sChain").disabled=!on; $("sSpiral").disabled=!on; $("sCentre").disabled=on; if(on){ S.centre=null; } if(!on){ setSpiral(false); } drawPlots(); legend(); }
+function setSpiral(on){ S.spiralTarget=on?1:0; $("sSpiral").setAttribute("aria-pressed",on); drawPlots(); legend(); }
+$("sMass").onclick=()=>{ stopTour(); setMass(!S.mass); };
+$("sChain").onclick=()=>{ stopTour(); if(S.tRd>0.8){ $("zoom").value=0.5; readUI(); } seedChain(); };
+$("sSpiral").onclick=()=>{ stopTour(); setSpiral(S.spiralTarget<0.5); };
+$("sCentre").onclick=()=>{ stopTour(); S.centre=Math.floor(rnd()*cr.length); S.centreW=0; };
+$("bReset").onclick=()=>{ stopTour(); resetAll(); };
+function resetAll(){ setMass(false); setSpiral(false); S.spiral=0; S.centre=null; $("zoom").value=1.6; $("tilt").value=35; readUI(); S.Rd=1.6; init(); }
+function legend(){
+  const items=[["#aab6cc","space cell"],["#2ecc71","new cell (creation)"]];
+  if(S.mass) items.push(["#ff6b6b","absorbed cell (only inside R)"],["#48dbfb","replacement chain"],["#ffb86b","matter on the riverbed"]);
+  $("legend").innerHTML=items.map(([c,t])=>`<div><span style="background:${c}"></span>${t}</div>`).join("");
+}
+const sheet=$("panel"), st=$("sheetToggle");
+st.onclick=()=>{ const o=sheet.classList.toggle("open"); st.setAttribute("aria-expanded",o); st.textContent=o?"Hide model controls":"Show model controls"; };
+if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) $("tRotate").checked=false;
+// drag to rotate / tilt, wheel & pinch to zoom
+const ptrs=new Map(); let pinch0=0, z0=1.6;
+const stage=$("stage");
+stage.addEventListener("pointerdown",e=>{ stage.setPointerCapture(e.pointerId); ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY}); if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; pinch0=Math.hypot(a.x-b.x,a.y-b.y); z0=+$("zoom").value; } });
+stage.addEventListener("pointermove",e=>{ if(!ptrs.has(e.pointerId)) return; const p=ptrs.get(e.pointerId);
+  if(ptrs.size===1){ tAz+=(e.clientX-p.x)*0.008; $("tilt").value=Math.min(75,Math.max(0,+$("tilt").value+(e.clientY-p.y)*0.25)); readUI(); }
+  p.x=e.clientX; p.y=e.clientY;
+  if(ptrs.size===2){ const [a,b]=[...ptrs.values()], d=Math.hypot(a.x-b.x,a.y-b.y); if(pinch0){ $("zoom").value=Math.min(2,Math.max(0.3,z0*pinch0/d)); readUI(); } } });
+const endP=e=>{ ptrs.delete(e.pointerId); if(ptrs.size<2) pinch0=0; }; stage.addEventListener("pointerup",endP); stage.addEventListener("pointercancel",endP);
+stage.addEventListener("wheel",e=>{ e.preventDefault(); $("zoom").value=Math.min(2,Math.max(0.3,(+$("zoom").value)*Math.exp(e.deltaY*0.0015))); readUI(); },{passive:false});
+
+// ---------------- tour ----------------
+let tour=null;
+const TOUR=[
+  [0,  ()=>{ resetAll(); }, "Creation: cells appear at random everywhere, 3H per cell — Hubble’s law"],
+  [6,  ()=>{ S.centre=Math.floor(rnd()*cr.length); S.centreW=0; }, "Re-centred on another cell: the expansion looks exactly the same — no centre"],
+  [11, ()=>{ S.centre=Math.floor(rnd()*cr.length); S.centreW=0; }, "…and from this cell too"],
+  [15, ()=>{ S.centre=null; setMass(true); }, "A mass appears: its influence spreads at c; behind the front the riverbed moves matter"],
+  [24, ()=>{ $("zoom").value=0.5; readUI(); }, "Absorption only inside the matter (red); neighbours replace the absorbed cells"],
+  [26, ()=>seedChain(), "A replacement chain (blue) drifts slowly toward M; the net inward flux diminishes outward"],
+  [31, ()=>seedChain(), "The cell drift is slow; it is not what moves matter"],
+  [36, ()=>{ $("zoom").value=1.6; readUI(); }, "The riverbed √(2GM/r) − Hr carries matter inward out to r_c (gold) — its acceleration is −GM/r²"],
+  [44, ()=>{ setSpiral(true); $("tilt").value=12; readUI(); }, "Adding the azimuthal flow: the riverbed speed becomes constant v_L — it only turns, never speeds up"],
+  [52, ()=>{}, "At r_c the spiral becomes a circle: inner spirals wind toward it, outer spirals unwind away"],
+  [62, ()=>{ stopTour(); }, ""]
+];
+function startTour(){ tour={t0:performance.now(), k:0}; }
+function stopTour(){ tour=null; $("caption").classList.remove("on"); }
+$("bTour").onclick=startTour; $("bStop").onclick=stopTour;
+function tourTick(now){ if(!tour) return; const t=(now-tour.t0)/1000;
+  while(tour && tour.k<TOUR.length && t>=TOUR[tour.k][0]){ const [_,fn,cap]=TOUR[tour.k]; tour.k++; fn(); if(tour&&cap){ $("caption").textContent=cap; $("caption").classList.add("on"); } } }
+
+// ---------------- loop ----------------
+let last=performance.now(), fN=0;
+function frame(now){
+  const sec=Math.min(0.05,(now-last)/1000); last=now;
+  tourTick(now);
+  S.Rd+= (S.tRd-S.Rd)*Math.min(1,sec*4);
+  S.spiral+= (S.spiralTarget-S.spiral)*Math.min(1,sec*1.2);
+  if(S.centre!==null) S.centreW=Math.min(1,S.centreW+sec*1.2);
+  const dt=0.24*sec*(+$("speed").value);
+  if(dt>0) step(dt);
+  if($("tRotate").checked&&ptrs.size===0) tAz+=0.05*sec;
+  az+=(tAz-az)*Math.min(1,sec*6);
+  draw();
+  if(fN%10===0){
+    $("counts").innerHTML=`space cells: ${cr.length}<br>created: ${rateC.toFixed(2)} per cell per 1/H<br>absorbed: ${rateA.toFixed(2)} per cell per 1/H`;
+    if(S.spiral>0.02 && fN%30===0) drawPlots();
+  }
+  fN++; requestAnimationFrame(frame);
+}
+derive(); buildArms(); readUI(); init(); legend(); setMass(false); resize(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
