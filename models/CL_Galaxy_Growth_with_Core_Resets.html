@@ -1,0 +1,488 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CL Galaxy Through Cosmic Time</title>
+<meta name="description" content="A single constant-Lagrangian galaxy grown from its earliest possible onset to today in flat ΛCDM: mass inflow history, the critical radius r_c tracking a(t), and the rotation curve and spiral at every epoch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* Layout: galaxy stage + controls on top, three linked charts below (histories, rotation curve, comoving check), notes last */
+:root{
+  --bg:#f5f6fa;--surface:#ffffff;--edge:#d6dce8;--ink:#141a28;--soft:#55607a;
+  --amber:#b8620f;--cyan:#0f7fb0;--violet:#5b4fd6;--green:#2f8a4f;--rose:#b23a5a;--grid:rgba(20,26,40,.09);
+  --canvas:#05070d;--cink:#e7ebf3;--csoft:#97a2b9;
+  --serif:"Source Serif 4",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#05070d;--surface:#0d1220;--edge:#222c42;--ink:#e7ebf3;--soft:#97a2b9;
+  --amber:#f2a24a;--cyan:#48dbfb;--violet:#a29bfe;--green:#5fd38a;--rose:#ff7b9c;--grid:rgba(231,235,243,.08);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#05070d;--surface:#0d1220;--edge:#222c42;--ink:#e7ebf3;--soft:#97a2b9;
+  --amber:#f2a24a;--cyan:#48dbfb;--violet:#a29bfe;--green:#5fd38a;--rose:#ff7b9c;--grid:rgba(231,235,243,.08);color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:28px 48px;padding-inline:16px}
+h1{font:600 clamp(24px,3.4vw,34px)/1.15 var(--serif);margin:0 0 6px;text-wrap:balance}
+h2{font:600 18px/1.3 var(--serif);margin:0 0 8px;text-wrap:balance}
+.lede{color:var(--soft);max-width:82ch;margin:0 0 20px}
+.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--edge);border-radius:12px;padding:14px;min-width:0}
+.stage{position:relative;padding:0;overflow:hidden;background:var(--canvas);border-color:var(--edge)}
+#gal{display:block;width:100%;aspect-ratio:1/1;max-width:100%}
+.hud{position:absolute;left:12px;top:10px;font:12.5px var(--mono);color:var(--cink);pointer-events:none;line-height:1.5}
+.hud b{font-weight:500;color:#f2a24a}
+.leg{position:absolute;left:12px;bottom:10px;right:12px;font:12px var(--mono);color:var(--csoft);display:flex;flex-wrap:wrap;gap:4px 14px;pointer-events:none}
+.leg i{display:inline-block;width:14px;height:0;border-top:2px solid;margin-right:5px;vertical-align:3px}
+.ctl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 14px}
+.ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--soft);min-width:0}
+.ctl label b{color:var(--ink);font:500 13px var(--mono)}
+.ctl .full{grid-column:1/-1}
+select,button{font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:8px;padding:6px 8px}
+button{cursor:pointer;font-weight:500}
+button.primary{background:var(--amber);border-color:var(--amber);color:#1a1205}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+input[type=range]{width:100%;accent-color:var(--amber)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.row button{flex:1 1 auto}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{flex:1 1 auto;font-size:13px}
+.seg button[aria-pressed=true]{border-color:var(--amber);color:var(--amber)}
+.chk{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--soft);margin-top:10px}
+.chk label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+@media (max-width:480px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{border:1px solid var(--edge);border-radius:10px;padding:7px 9px;min-width:0}
+.kpi span{display:block;font-size:11.5px;color:var(--soft)}
+.kpi b{font:500 15px var(--mono);font-variant-numeric:tabular-nums}
+.flag{border:1px dashed var(--edge);border-radius:8px;padding:8px 10px;font-size:13.5px;color:var(--soft);margin-top:12px}
+.flag b{color:var(--ink)}
+.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+@media (max-width:1000px){.charts{grid-template-columns:minmax(0,1fr)}}
+svg.ch{display:block;width:100%;height:auto}
+svg text{font:10.5px var(--mono);fill:var(--soft)}
+svg .ax{stroke:var(--edge);fill:none}
+svg .gl{stroke:var(--grid);fill:none}
+svg .ttl{font:11.5px var(--sans);fill:var(--soft)}
+.cap{font-size:12.5px;color:var(--soft);margin:8px 0 0}
+.keys{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--soft);margin-top:6px}
+.keys i{display:inline-block;width:14px;height:0;border-top:2px solid;margin-right:5px;vertical-align:3px}
+.notes{margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:900px){.notes{grid-template-columns:minmax(0,1fr)}}
+.notes p,.notes li{font-size:14px;max-width:72ch}
+.notes ul{padding-left:18px;margin:6px 0}
+.eq{font:13px var(--mono);background:var(--bg);border:1px solid var(--edge);border-radius:8px;padding:7px 10px;margin:8px 0;overflow-x:auto;white-space:nowrap}
+.tag{display:inline-block;font:500 11px var(--sans);border:1px solid var(--edge);border-radius:99px;padding:0 7px;margin-right:4px;color:var(--soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head><body>
+<div class="wrap">
+<header>
+  <h1>CL Galaxy Through Cosmic Time</h1>
+  <p class="lede">One constant-Lagrangian galaxy, grown from the earliest moment it can exist to today in a flat ΛCDM background. The CL mass M grows by a standard cosmological inflow (mass-accretion) history, H(t) and a(t) follow ΛCDM, and the critical radius r<sub>c</sub> = (2GM/H²)<sup>1/3</sup>, the radius where the radial river stalls, opens up with the expansion. Press play or drag the time slider.</p>
+</header>
+
+<div class="grid">
+  <section class="card stage" aria-label="Face-on view of the galaxy at the selected epoch">
+    <canvas id="gal" width="900" height="900" role="img" aria-label="Face-on spiral streamlines of the CL galaxy, its core radius R and critical radius r_c"></canvas>
+    <div class="hud" id="hud"></div>
+    <div class="leg"><span><i style="border-color:#f2a24a"></i>CL spiral streamlines</span><span><i style="border-color:#fff0cf"></i>core R</span><span><i style="border-color:#48dbfb;border-top-style:dashed"></i>critical radius r<sub>c</sub></span><span class="nst"><i style="border-color:#ffd36b"></i>active core R</span><span class="nst"><i style="border-color:#ff9ff3"></i>fossil rings and spirals</span><span class="nst"><i style="border-color:#a0ebbe"></i>disc (test masses, drawn to 3.5 R)</span><span class="dmc" hidden><i style="border-color:#5fd38a"></i>optical disc edge R<sub>opt</sub></span><span class="dmc" hidden><i style="border-color:#a29bfe;border-top-style:dotted"></i>dark-matter edge</span><span id="scaleLab"></span></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-ctl">
+    <h2 id="h-ctl">Epoch and assumptions</h2>
+    <div class="ctl">
+      <label class="full" for="tSl">Cosmic time <b id="tLab"></b><input id="tSl" type="range" min="0" max="1000" value="1000"></label>
+      <div class="full row" style="margin-top:0"><button class="primary" id="play">Play from onset</button><button id="toOn">Onset</button><button id="toNow">Today</button></div>
+      <label for="M0">Mass today M₀ <b id="M0Lab"></b><input id="M0" type="range" min="8" max="12" step="0.05" value="10"></label>
+      <label for="R0">Core radius today R₀ <b id="R0Lab"></b><input id="R0" type="range" min="-0.5" max="1" step="0.01" value="0.301"></label>
+      <label class="full" for="grow">Mass growth (inflow history)
+        <select id="grow">
+          <option value="mcb" selected>McBride et al. 2009: M₀(1+z)^β e^(−γz)</option>
+          <option value="wec">Wechsler et al. 2002: M₀ e^(−αz)</option>
+          <option value="pow">Power law in time: M₀(t/t₀)^1.5 (de Haas 2026a)</option>
+          <option value="fix">No growth (fixed M₀): checks r_c ∝ a</option>
+        </select></label>
+      <label for="gam">γ (or α) <b id="gamLab"></b><input id="gam" type="range" min="0.3" max="1.2" step="0.01" value="0.69"></label>
+      <label for="bet">β <b id="betLab"></b><input id="bet" type="range" min="-0.5" max="1" step="0.01" value="0.10"></label>
+      <label class="full">Core radius history
+        <div class="seg" id="segR" role="group" aria-label="Core radius history">
+          <button data-k="self" aria-pressed="true">R/r<sub>c</sub> fixed (self-similar)</button>
+          <button data-k="a" aria-pressed="false">R ∝ a</button>
+          <button data-k="fix" aria-pressed="false">R fixed</button>
+        </div></label>
+      <label for="Mmin">Minimum mass for a galaxy <b id="MminLab"></b><input id="Mmin" type="range" min="5" max="9" step="0.1" value="6"></label>
+      <label for="tst"><span>Start time t<sub>start</sub></span> <b id="tstLab"></b><input id="tst" type="range" min="0.1" max="3" step="0.01" value="0.4"></label>
+      <label for="fd" class="nst"><span>Disc capture f<sub>d</sub> (share of inflow kept outside the core)</span> <b id="fdLab"></b><input id="fd" type="range" min="0.55" max="0.95" step="0.01" value="0.75"></label>
+      <label for="kk" class="nst"><span>Reset when M<sub>disc</sub> = k · M<sub>core</sub></span> <b id="kkLab"></b><input id="kk" type="range" min="1.5" max="4" step="0.1" value="2"></label>
+      <label for="nint" class="nst"><span>Integration time N<sub>int</sub> (orbits until a fossil stage merges)</span> <b id="nintLab"></b><input id="nint" type="range" min="1" max="2.3" step="0.01" value="1.477"></label>
+      <label for="phys" class="nst"><span>Fossil spiral orientation</span><select id="phys"><option value="p">pattern angle ∫Ω dt at the reset</option><option value="r">random per reset</option></select></label>
+      <label for="eps" class="nst full"><span>Core size law GM<sub>core</sub>/R² = ε·cH(t), set at onset and at each reset</span> <b id="epsLab"></b><input id="eps" type="range" min="0.005" max="0.2" step="0.001" value="0.02"></label>
+      <label for="vr" id="vrBox"><span>Halo V<sub>max</sub>/V<sub>200</sub></span> <b id="vrLab"></b><input id="vr" type="range" min="1" max="1.8" step="0.01" value="1.3"></label>
+      <label class="dmc" hidden>Dark-matter edge
+        <div class="seg" id="segH" role="group" aria-label="Dark-matter halo edge">
+          <button data-k="vir" aria-pressed="true">R<sub>vir</sub> (Δ<sub>vir</sub>)</button>
+          <button data-k="200" aria-pressed="false">R<sub>200c</sub></button>
+        </div></label>
+    </div>
+    <div class="chk"><label><input type="checkbox" id="logr" checked> Log radius in galaxy view</label><label><input type="checkbox" id="como"> Comoving view (divide by a)</label><label><input type="checkbox" id="nestOn" checked> Core + disc with resets (nested rings)</label><label><input type="checkbox" id="dmOn"> Show ΛCDM comparison radii (optical disc edge, dark-matter edge)</label></div>
+    <div class="kpis" id="kp"></div>
+    <div class="flag" id="note"></div>
+  </section>
+</div>
+
+<div class="charts">
+  <section class="card"><h2>Growth histories</h2><svg class="ch" id="ch1" viewBox="0 0 400 260" role="img" aria-label="Normalised histories of a, M, r_c, R and v_L against cosmic time"></svg>
+    <div class="keys"><span><i style="border-color:var(--soft);border-top-style:dashed"></i>a(t)</span><span><i style="border-color:var(--cyan)"></i>r<sub>c</sub></span><span><i style="border-color:var(--rose)"></i>M</span><span><i style="border-color:var(--ink)"></i>R</span><span><i style="border-color:var(--amber)"></i>v<sub>L</sub></span><span class="nst"><i style="border-color:#d94fbf"></i>M<sub>core</sub></span><span class="nst"><i style="border-color:var(--green)"></i>M<sub>disc</sub> (ticks: resets)</span><span class="dmc" hidden><i style="border-color:var(--green)"></i>R<sub>opt</sub></span><span class="dmc" hidden><i style="border-color:var(--violet);border-top-style:dotted"></i>DM edge</span></div>
+    <p class="cap">All normalised to today, log scale. Matter era: r<sub>c</sub> runs parallel to a(t) times M<sup>1/3</sup>.</p></section>
+  <section class="card"><h2>Rotation curve</h2><svg class="ch" id="ch2" viewBox="0 0 400 260" role="img" aria-label="Rotation curve at the selected epoch with earlier epochs faint"></svg>
+    <p class="cap">Bright: selected epoch. Faint: 0.5, 1, 2, 4, 8 Gyr and today. Dotted: r<sub>c</sub> at the selected epoch, where v reaches v<sub>L</sub>.</p></section>
+  <section class="card"><h2>Check: r<sub>c</sub> against a(t)</h2><svg class="ch" id="ch3" viewBox="0 0 400 260" role="img" aria-label="Comoving critical radius r_c divided by a against cosmic time"></svg>
+    <p class="cap">r<sub>c</sub>/a, normalised at onset. Flat line: r<sub>c</sub> ∝ a. Dashed: fixed mass, exact formula below; solid: with mass growth.</p></section>
+</div>
+
+<div class="notes">
+  <section class="card"><h2>What the model does</h2>
+    <div class="eq">a(t) = (Ω<sub>m</sub>/Ω<sub>Λ</sub>)<sup>1/3</sup> sinh<sup>2/3</sup>(³⁄₂√Ω<sub>Λ</sub> H₀ t) ,  H(t) = H₀√Ω<sub>Λ</sub> coth(³⁄₂√Ω<sub>Λ</sub> H₀ t)</div>
+    <div class="eq">r<sub>c</sub> = (2GM/H²)<sup>1/3</sup> = (2GM/H₀²)<sup>1/3</sup> · a · (Ω<sub>m</sub> + Ω<sub>Λ</sub>a³)<sup>−1/3</sup></div>
+    <ul>
+      <li><b>r<sub>c</sub> and a(t).</b> For fixed M, r<sub>c</sub> ∝ a exactly while matter dominates, and freezes at (2GM/H₀²Ω<sub>Λ</sub>)<sup>1/3</sup> once Λ takes over. With mass growth, r<sub>c</sub> ∝ a·M<sup>1/3</sup> in the matter era.</li>
+      <li><b>r<sub>c</sub> as a density radius.</b> The mean density inside r<sub>c</sub> is 3M/4πr<sub>c</sub>³ = 3H²/8πG, exactly the critical density. The ΛCDM virial radius R<sub>200</sub> is the radius of 200 times that density, so R<sub>200</sub> = r<sub>c</sub>/200<sup>1/3</sup> ≈ r<sub>c</sub>/5.85 for the same mass.</li>
+      <li><b>The CL curve at each epoch.</b> X = √(2GM/R) − HR, v<sub>L</sub>² = ³⁄₂X²; v² = ½X²r²/R² inside R and v<sub>L</sub>² − (√(2GM/r) − Hr)² outside, with the epoch's own M, R and H. The spiral streamlines follow tan α = v<sub>r,eff</sub>/v<sub>φ</sub> and wind up into the circle r<sub>c</sub>; the view draws them from 0.7 r<sub>c</sub> inward, because closer to r<sub>c</sub> they wind so tightly that the turns merge.</li>
+      <li><b>Core + disc with resets, sized by the embedding condition.</b> The core radius follows your size law GM<sub>core</sub>/R² = ε·cH(t) (de Haas 2025c): it is set at onset and again at each reset, with the epoch's own H(t), and stays fixed in between. Inflowing mass is split: a share 1 − f<sub>d</sub> crosses R and joins the core mass M<sub>core</sub>, which alone drives the CL flow; the share f<sub>d</sub> stays outside R as a disc of test masses. When the disc reaches k·M<sub>core</sub> it is no longer a test mass: the disc joins the core (all mass inside the new R, M<sub>2</sub> = everything), the spiral of the ending stage freezes as a fossil between the old and new radius, and the new radius follows from the embedding condition with the new mass. No ΛCDM size relation enters this layer. Because R ∝ (M/H)<sup>1/2</sup>, the plateau obeys v<sub>L</sub>⁴ ≈ 9εGcH·M<sub>core</sub>: a baryonic Tully–Fisher slope of 4 at every epoch, with a zero point that scales with H(t). ε = 0.02 reproduces the observed BTFR (M<sub>bar</sub> = 47 M☉ (km/s)<sup>−4</sup> V⁴, V<sub>flat</sub> ≈ v<sub>L</sub>/1.065) for M₀ taken as the total baryonic mass, and leaves today's core at GM/R² ≈ 10<sup>−1.2</sup> cH₀, close to the 10<sup>−1.0</sup> found in the SPARC CL fits. The disc is drawn out to 3.5 R, the SPARC median ratio of the optical edge to R.</li>
+      <li><b>Integration of earlier stages.</b> Each fossil stage counts the orbits N completed inside the core since its reset (solid-body Ω = v(R)/R of the active core). Its ring and spiral fade as w = exp(−N/N<sub>int</sub>), and inside R the rotation curve shifts with the same weight from the frozen curve of the stage that built each band (L₁ remnants) to the solid-body interior of the current Lagrangian: v² = w·v<sub>stage</sub>² + (1 − w)·v<sub>now</sub>². The pink solid line is this blend; the dashed line is the fully merged interior. A stage counts as still distinguishable while w &gt; 0.1, and the readout calls the galaxy nested or single-L accordingly. Inner rings complete hundreds to thousands of orbits and merge; only a recent reset stays visible, so the model predicts that galaxies with clean two-L fits had their last reset late.</li>
+      <li><b>Fossil orientation.</b> A frozen spiral keeps the pattern angle it had at its reset, accumulated as ∫Ω dt over the core's history. After many orbits that angle is effectively random; the alternative setting draws a seeded random angle per reset. Neither carries information, so consecutive fossils do not line up into a spiral of their own.</li>
+      <li><b>Few resets.</b> Resets need f<sub>d</sub> &gt; k/(1+k), and each one raises the core mass by M₂/M₁ = 1 + k/(f<sub>d</sub> − k(1 − f<sub>d</sub>)). Two to four resets since t<sub>start</sub>, with jumps of ×5–20, come from f<sub>d</sub> about 0.03–0.15 above the threshold: k = 1.5 with f<sub>d</sub> 0.65–0.75, k = 2 with f<sub>d</sub> 0.70–0.85, k = 3 with f<sub>d</sub> 0.80–0.90, k = 4 with f<sub>d</sub> 0.85–0.95. Far above the threshold resets become frequent and approach continuous growth R(t) = (GM/εcH)<sup>1/2</sup>; below it there is no reset and the disc grows without bound. The sliders are limited to this neighbourhood, and the regime readout shows the jump and its class.</li>
+      <li><b>Optical disc and dark-matter edges (switch, off by default).</b> The halo mass today follows from the plateau speed, V<sub>200</sub> = v<sub>L</sub>/(V<sub>max</sub>/V<sub>200</sub>) and M<sub>200</sub> = V<sub>200</sub>³/(10GH₀), and grows with the same accretion history. The dark-matter edge is R<sub>Δ</sub> = (2GM<sub>h</sub>/ΔH²)<sup>1/3</sup>, with Δ<sub>vir</sub>(z) from Bryan &amp; Norman (1998) or Δ = 200. The optical edge is R<sub>opt</sub> = 3.2 R<sub>d</sub>, with R<sub>d</sub> from r<sub>1/2</sub> = 0.015 R<sub>200c</sub>, so R<sub>opt</sub> ≈ 0.029 R<sub>200c</sub>. Note that r<sub>c</sub> has the same form with Δ = 1 and the CL mass M in place of the halo mass.</li>
+      <li><b>Earliest possible onset.</b> The galaxy starts at the latest of three conditions: M(t) ≥ the minimum galaxy mass, R(t) &lt; r<sub>c</sub>(t) (otherwise X ≤ 0 and no CL structure exists), and t ≥ t<sub>start</sub>, the chosen start time (default 0.4 Gyr, z ≈ 11).</li>
+    </ul>
+  </section>
+  <section class="card"><h2>What is assumed</h2>
+    <ul>
+      <li><span class="tag">imposed</span> Flat ΛCDM with Ω<sub>m</sub> = 0.31, H₀ = 67.9 km/s/Mpc (= 2.2×10⁻¹⁸ s⁻¹, the value used in the SPARC CL fits); radiation neglected, so the earliest ~1 Myr are not exact.</li>
+      <li><span class="tag">calibrated</span> The growth laws are halo mass-accretion histories from ΛCDM simulations (McBride et al. 2009; Wechsler et al. 2002) or the power law of de Haas (2026a). Applying them to the CL mass M, which tracks the inner (bulge-like) mass rather than the halo, is an assumption of this model.</li>
+      <li><span class="tag">calibrated</span> Average size relations: R<sub>opt</sub> = 3.2 R<sub>d</sub> (Persic &amp; Salucci 1991), r<sub>1/2</sub> ≈ 0.015 R<sub>200c</sub> (Kravtsov 2013), Δ<sub>vir</sub>(z) (Bryan &amp; Norman 1998), V<sub>max</sub>/V<sub>200</sub> ≈ 1.2–1.4 for Milky-Way-mass haloes. These are population averages with about 0.2 dex scatter, applied here to one galaxy. Both edges are the standard dark-matter picture, drawn for comparison with r<sub>c</sub>; the CL model itself has no halo.</li>
+      <li><span class="tag">calibrated</span> Four parameters of the core + disc layer: the disc capture fraction f<sub>d</sub> (0.75), the reset threshold k (2), the embedding factor ε (0.02, from the BTFR zero point) and the integration time N<sub>int</sub> (30 orbits, a plausible range is 20–100; not calibrated). The size law itself, GM/R² = ε·cH(t), is your embedding condition; only its factor is calibrated.</li>
+      <li><span class="tag">assumed</span> The core radius R follows one of three simple histories; none is derived from the CL theory yet.</li>
+      <li><span class="tag">derived</span> r<sub>c</sub>(t), v<sub>L</sub>(t), the rotation curve and the spiral at each epoch follow from M(t), R(t) and H(t) with no further freedom.</li>
+      <li><span class="tag">not included</span> The dynamical foreground (bars, rings, mergers, virial zones) and nested Lagrangians; this is the single-L kinematic background only.</li>
+    </ul>
+    <p class="cap">E.P.J. de Haas, constant-Lagrangian galaxy model. Part of <a href="https://haas2u-ai.github.io/bq-galaxy-models/" style="color:var(--cyan)">bq-galaxy-models</a>.</p>
+  </section>
+</div>
+</div>
+
+<script>
+(function(){
+const G = 4.30091e-6;                 // kpc (km/s)^2 / Msun
+const H0 = 67.9, Om = 0.31, OL = 1 - Om;
+const hK = H0/1000;                   // km/s/kpc
+const hG = H0/977.792;                // 1/Gyr
+const K = 1.5*Math.sqrt(OL)*hG;
+const T0 = Math.asinh(Math.sqrt(OL/Om))/K;
+const aOf = t => Math.pow(Om/OL, 1/3)*Math.pow(Math.sinh(K*t), 2/3);
+const HOf = t => hK*Math.sqrt(OL)/Math.tanh(K*t);           // km/s/kpc
+const zOf = t => 1/aOf(t) - 1;
+function tOfz(z){ const a = 1/(1+z); return Math.asinh(Math.sqrt(OL/Om)*Math.pow(a, 1.5))/K; }
+const $ = id => document.getElementById(id);
+const S = {rmode:'self', hmode:'vir', t:T0, playing:false, Mh0:1e12, };
+
+function Mof(t){
+  const M0 = Math.pow(10, +$('M0').value), z = zOf(t), g = +$('gam').value, b = +$('bet').value, m = $('grow').value;
+  if (m === 'mcb') return M0*Math.pow(1+z, b)*Math.exp(-g*z);
+  if (m === 'wec') return M0*Math.exp(-g*z);
+  if (m === 'pow') return M0*Math.pow(t/T0, 1.5);
+  return M0;
+}
+const rcOf = t => Math.pow(2*G*Mof(t)/Math.pow(HOf(t), 2), 1/3);
+function Rof(t){
+  const R0 = Math.pow(10, +$('R0').value);
+  if (S.rmode === 'fix') return R0;
+  if (S.rmode === 'a') return R0*aOf(t);
+  return R0*rcOf(t)/rcOf(T0);
+}
+function Xof(t){ const M = Mof(t), R = Rof(t); return Math.sqrt(2*G*M/R) - HOf(t)*R; }
+const F_OPT = 3.2*0.015/1.678;                         // R_opt = 3.2 R_d, R_d = r_1/2/1.678, r_1/2 = 0.015 R_200c
+function Mhof(t){ return S.Mh0*Mof(t)/Mof(T0); }
+function DeltaOf(t){ if (S.hmode === '200') return 200; const a = aOf(t), E2 = Om/(a*a*a) + OL, x = Om/(a*a*a)/E2 - 1; return 18*Math.PI*Math.PI + 82*x - 39*x*x; }
+function RhOf(t){ return Math.pow(2*G*Mhof(t)/(DeltaOf(t)*Math.pow(HOf(t), 2)), 1/3); }
+function R200of(t){ return Math.pow(G*Mhof(t)/(100*Math.pow(HOf(t), 2)), 1/3); }
+function RoptOf(t){ return F_OPT*R200of(t); }
+const DM = () => $('dmOn').checked;
+const NEST = () => $('nestOn').checked;
+const CLIGHT = 299792.458;                             // km/s
+const Remb = (M, t) => Math.sqrt(G*M/((+$('eps').value)*CLIGHT*HOf(t)));   // embedding: GM/R^2 = eps c H(t)
+let HIST = null;
+function simulate(){
+  HIST = null; if (!ON) return;
+  const fd = +$('fd').value, k = +$('kk').value, N = 2400, t1 = ON.t;
+  const ts = [], Mc = [], Md = [], Rc = [], q = [], Nc = [], Ph = [], resets = [];
+  let mc = Mof(t1), md = 0, R = Remb(mc, t1), mPrev = mc, nOrb = 0, phi = 0, tPrev = t1;
+  for (let i = 0; i <= N; i++){
+    const t = t1*Math.pow(T0/t1, i/N);
+    if (i > 0){
+      const m = Mof(t), dm = m - mPrev; mPrev = m; mc += (1 - fd)*dm; md += fd*dm;
+      const X_ = Math.sqrt(2*G*mc/R) - HOf(t)*R, Om = X_ > 0 ? (X_/Math.SQRT2)/R*KPG : 0;   // solid-body Ω inside the core, Gyr⁻¹
+      nOrb += Om*(t - tPrev)/(2*Math.PI); phi += Om*(t - tPrev); tPrev = t;
+      if (md >= k*mc){                                     // disc no longer a test mass: reset
+        resets.push({t, Rold:R, Mc:mc, H:HOf(t), N0:nOrb, phi:phi, rnd:2*Math.PI*frac(Math.sin(resets.length*12.9898 + 78.233)*43758.5453)});
+        mc += md; md = 0; const Rn = Remb(mc, t); resets[resets.length-1].Rnew = Rn; R = Rn;
+      }
+    }
+    ts.push(t); Mc.push(mc); Md.push(md); Rc.push(R); q.push(G*mc/(R*R)/(CLIGHT*HOf(t))); Nc.push(nOrb); Ph.push(phi);
+  }
+  HIST = {ts, Mc, Md, Rc, q, Nc, Ph, resets, R0:Remb(Mof(t1), t1)};
+}
+function stateAt(t){
+  if (!HIST) return null; const ts = HIST.ts; let i = 0;
+  if (t >= ts[ts.length-1]) i = ts.length-1; else if (t > ts[0]){ let lo = 0, hi = ts.length-1; while (hi - lo > 1){ const m = (lo+hi) >> 1; if (ts[m] <= t) lo = m; else hi = m; } i = lo; }
+  const Nint = NINT(), rs = HIST.resets.filter(r => r.t <= t).map(r => Object.assign({}, r, {N:HIST.Nc[i] - r.N0, w:Math.exp(-(HIST.Nc[i] - r.N0)/Nint)}));
+  return {t, Mc:HIST.Mc[i], Md:HIST.Md[i], R:HIST.Rc[i], q:HIST.q[i], phi:HIST.Ph[i], resets:rs, next:HIST.resets.find(r => r.t > t), nVis:rs.filter(r => r.w > 0.1).length};
+}
+const layerOn = () => NEST() && !!HIST;
+const KPG = 1.0227;                                   // 1 km/s/kpc in Gyr⁻¹
+const frac = x => x - Math.floor(x);
+const NINT = () => Math.pow(10, +$('nint').value);
+const fossilAngle = r => $('phys').value === 'r' ? r.rnd : -(r.phi % (2*Math.PI));
+function vStage(r, Ms, Rs, Hs){ const X = Math.sqrt(2*G*Ms/Rs) - Hs*Rs; if (!(X > 0)) return NaN; const v2 = r <= Rs ? 0.5*X*X*r*r/(Rs*Rs) : 1.5*X*X - Math.pow(Math.sqrt(2*G*Ms/r) - Hs*r, 2); return Math.sqrt(Math.max(v2, 0)); }
+// interior blend: inside R_latest each band keeps the shape of the stage that built it, weighted by w = exp(-N/N_int)
+function vBlend(r, s, t){ const vNow = vCore(r, s, t); if (!s.resets.length || r > s.R) return vNow;
+  let j = s.resets.findIndex(x => r <= x.Rnew); if (j < 0) return vNow; const f = s.resets[j];
+  const vOld = vStage(r, f.Mc, f.Rold, f.H); if (!isFinite(vOld)) return vNow;
+  return Math.sqrt(f.w*vOld*vOld + (1 - f.w)*vNow*vNow); }
+function Xc(s, t){ return Math.sqrt(2*G*s.Mc/s.R) - HOf(t)*s.R; }
+function vCore(r, s, t){ const X = Xc(s, t); if (!(X > 0)) return NaN; const v2 = r <= s.R ? 0.5*X*X*r*r/(s.R*s.R) : 1.5*X*X - Math.pow(Math.sqrt(2*G*s.Mc/r) - HOf(t)*r, 2); return Math.sqrt(Math.max(v2, 0)); }
+function regime(){ const fd = +$('fd').value, k = +$('kk').value, thr = k/(1+k), d = fd - k*(1 - fd);
+  if (d <= 0) return `none: f<sub>d</sub> ≤ ${thr.toFixed(2)}`; const j = 1 + k/d; return `M jump ×${j.toFixed(1)} · ${j < 4 ? 'many (near-continuous)' : j > 25 ? 'rare' : 'few'}`; }
+function setHalo(){ const vL0 = Math.sqrt(1.5)*Xof(T0), V200 = vL0/(+$('vr').value); S.Mh0 = Math.pow(V200, 3)/(10*G*hK); }
+function vCL(r, t){
+  const M = Mof(t), R = Rof(t), H = HOf(t), X = Math.sqrt(2*G*M/R) - H*R;
+  if (X <= 0) return NaN;
+  const v2 = r <= R ? 0.5*X*X*r*r/(R*R) : 1.5*X*X - Math.pow(Math.sqrt(2*G*M/r) - H*r, 2);
+  return Math.sqrt(Math.max(v2, 0));
+}
+function onset(){
+  const Mmin = Math.pow(10, +$('Mmin').value), tz = +$('tst').value;
+  const ok = t => Mof(t) >= Mmin && Rof(t) < rcOf(t) && Xof(t) > 0 && t >= tz;
+  if (!ok(T0)) return null;
+  let lo = 1e-3, hi = T0;
+  if (ok(lo)) return lo;
+  for (let i = 0; i < 60; i++){ const m = 0.5*(lo+hi); if (ok(m)) hi = m; else lo = m; }
+  // which condition binds
+  const e = hi*0.995, why = Mof(e) < Mmin ? 'mass' : (e < tz ? 'zmax' : 'rc');
+  return {t:hi, why};
+}
+const fmtM = m => { const e = Math.floor(Math.log10(m)); return (m/Math.pow(10,e)).toFixed(2) + '×10' + String(e).split('').map(c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(c)]||'⁻').join(''); };
+const fmtT = t => t < 1 ? (t*1000).toFixed(0)+' Myr' : t.toFixed(2)+' Gyr';
+const fmtZ = z => z >= 10 ? z.toFixed(1) : z.toFixed(2);
+
+/* ---------- galaxy canvas ---------- */
+const cv = $('gal'), cx = cv.getContext('2d');
+function drawGalaxy(t, on){
+  const W = cv.width, C = W/2, M = Mof(t), R = Rof(t), H = HOf(t), rc = rcOf(t), a = aOf(t);
+  const X = Math.sqrt(2*G*M/R) - H*R, vL = Math.sqrt(1.5)*X;
+  const como = $('como').checked, logr = $('logr').checked;
+  const div = como ? a : 1;
+  const rcT = rcOf(T0);                                    // fixed frame: today's r_c (physical) sets the outer edge
+  const rOut = 1.15*(DM() ? Math.max(rcT, RhOf(T0)) : rcT), rIn = 0.05;
+  const rad = r => { r = r/div; if (logr){ const u = (Math.log10(Math.max(r, rIn)) - Math.log10(rIn))/(Math.log10(rOut) - Math.log10(rIn)); return Math.max(0, u)*C*0.94; } return r/rOut*C*0.94; };
+  cx.clearRect(0, 0, W, W); cx.fillStyle = '#05070d'; cx.fillRect(0, 0, W, W);
+  // scale rings
+  cx.strokeStyle = 'rgba(151,162,185,.16)'; cx.lineWidth = 1; cx.fillStyle = 'rgba(151,162,185,.55)'; cx.font = '20px IBM Plex Mono, monospace';
+  const ticks = logr ? [0.1, 1, 10, 100, 1000] : [50, 100, 200, 300, 400];
+  ticks.forEach(k => { const p = logr ? (Math.log10(k) - Math.log10(rIn))/(Math.log10(rOut) - Math.log10(rIn))*C*0.94 : k/rOut*C*0.94; if (p > 4 && p < C*0.97){ cx.beginPath(); cx.arc(C, C, p, 0, 2*Math.PI); cx.stroke(); cx.fillText(k + (como ? ' ckpc' : ' kpc'), C + p*0.707 + 4, C - p*0.707 - 4); } });
+  if (!(X > 0)) return;
+  // core glow
+  const pR = rad(layerOn() ? HIST.R0 : R), g = cx.createRadialGradient(C, C, 0, C, C, Math.max(pR, 3));
+  g.addColorStop(0, 'rgba(255,240,207,.95)'); g.addColorStop(1, 'rgba(255,184,107,.10)');
+  cx.fillStyle = g; cx.beginPath(); cx.arc(C, C, Math.max(pR, 3), 0, 2*Math.PI); cx.fill();
+  cx.strokeStyle = '#fff0cf'; cx.lineWidth = 2; cx.beginPath(); cx.arc(C, C, Math.max(pR, 2), 0, 2*Math.PI); cx.stroke();
+  // critical circle
+  cx.setLineDash([10, 8]); cx.strokeStyle = '#48dbfb'; cx.lineWidth = 2.2; cx.beginPath(); cx.arc(C, C, rad(rc), 0, 2*Math.PI); cx.stroke(); cx.setLineDash([]);
+  if (DM()){ const pH = rad(RhOf(t)), pO = rad(RoptOf(t));
+  cx.setLineDash([3, 7]); cx.strokeStyle = '#a29bfe'; cx.lineWidth = 2.4; cx.beginPath(); cx.arc(C, C, pH, 0, 2*Math.PI); cx.stroke(); cx.setLineDash([]);
+  cx.fillStyle = 'rgba(95,211,138,.07)'; cx.beginPath(); cx.arc(C, C, pO, 0, 2*Math.PI); cx.fill();
+  cx.strokeStyle = '#5fd38a'; cx.lineWidth = 2.4; cx.beginPath(); cx.arc(C, C, pO, 0, 2*Math.PI); cx.stroke();
+  cx.font = '21px IBM Plex Mono, monospace';
+  cx.fillStyle = '#5fd38a'; cx.fillText('R_opt', C - pO*0.707 - 70, C + pO*0.707 + 22);
+  cx.fillStyle = '#a29bfe'; cx.fillText(S.hmode === '200' ? 'R_200c' : 'R_vir', C - pH*0.707 - 80, C + pH*0.707 + 24); }
+  cx.fillStyle = '#48dbfb'; cx.fillText('r_c', C + rad(rc)*0.94 + 8, C + 6);
+  // spiral streamlines: dphi/dlnr = v_phi / w, integrated inward from just inside r_c
+  function spiral(Ms, Hs, vLs, rA, rB, rot, col, lw){
+    if (!(rB > rA)) return;
+    const arms = 2, N = 900, l0 = Math.log(rA), l1 = Math.log(rB), dl = (l1 - l0)/N;
+    // phase so that the arm passes the outer edge rB at angle rot
+    for (let k = 0; k < arms; k++){
+      let phi = rot + k*2*Math.PI/arms; cx.beginPath();
+      for (let i = N; i >= 0; i--){
+        const r = Math.exp(l0 + i*dl), w = Math.sqrt(2*G*Ms/r) - Hs*r, vp = Math.sqrt(Math.max(vLs*vLs - w*w, 0));
+        if (i < N) phi += (w > 1e-6 ? Math.min(vp/w, 60) : 60)*dl;
+        const p = rad(r), x = C + p*Math.cos(phi), y = C + p*Math.sin(phi);
+        if (i === N) cx.moveTo(x, y); else cx.lineTo(x, y);
+      }
+      cx.strokeStyle = col; cx.lineWidth = lw; cx.stroke();
+    }
+  }
+  if (layerOn()){
+    const st = stateAt(t), pC = rad(st.R), pD = Math.max(rad(3.5*st.R), pC + 2);
+    const dA = Math.min(0.38, 0.06 + 0.12*st.Md/Math.max(st.Mc, 1));
+    const gd = cx.createRadialGradient(C, C, pC, C, C, pD); gd.addColorStop(0, `rgba(160,235,190,${dA})`); gd.addColorStop(1, 'rgba(160,235,190,0)');
+    cx.fillStyle = gd; cx.beginPath(); cx.arc(C, C, pD, 0, 2*Math.PI); cx.fill();
+    st.resets.forEach(r => { if (r.w < 0.02) return; const Xo = Math.sqrt(2*G*r.Mc/r.Rold) - r.H*r.Rold;
+      if (Xo > 0) spiral(r.Mc, r.H, Math.sqrt(1.5)*Xo, r.Rold, r.Rnew, fossilAngle(r), `rgba(255,159,243,${(0.85*r.w).toFixed(3)})`, 2.0);
+      cx.strokeStyle = `rgba(255,159,243,${r.w.toFixed(3)})`; cx.lineWidth = 2.2; cx.beginPath(); cx.arc(C, C, rad(r.Rnew), 0, 2*Math.PI); cx.stroke(); });
+    const Xa = Xc(st, t), rcC = Math.pow(2*G*st.Mc/(H*H), 1/3);
+    cx.strokeStyle = '#ffd36b'; cx.lineWidth = 2.6; cx.beginPath(); cx.arc(C, C, pC, 0, 2*Math.PI); cx.stroke();
+    cx.fillStyle = '#ffd36b'; cx.font = '21px IBM Plex Mono, monospace'; cx.fillText('core R', C - pC*0.707 - 92, C - pC*0.707 - 6);
+    if (Xa > 0) spiral(st.Mc, H, Math.sqrt(1.5)*Xa, st.R, 0.7*rcC, -(st.phi % (2*Math.PI)), 'rgba(242,162,74,.9)', 2.6);
+  } else spiral(M, H, vL, R, 0.7*rc, -t*0.35, 'rgba(242,162,74,.9)', 2.6);
+  $('scaleLab').textContent = (logr ? 'log radius' : 'linear radius') + (como ? ', comoving' : ', physical');
+}
+
+/* ---------- small SVG chart helpers ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, at, p){ const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (p) p.appendChild(e); return e; }
+function tx(p, x, y, s, at){ const t = el('text', Object.assign({x, y}, at || {}), p); t.textContent = s; return t; }
+function clear(s){ while (s.firstChild) s.removeChild(s.firstChild); }
+const BX = {W:400, H:260, l:44, r:10, t:10, b:34};
+function frame(svg, xt, yt, xs, ys, xl, yl, xlog, ylog){
+  xt.forEach(v => { el('line', {x1:xs(v), x2:xs(v), y1:BX.t, y2:BX.H-BX.b, class:'gl'}, svg); tx(svg, xs(v), BX.H-BX.b+13, xlog ? String(v) : String(v), {'text-anchor':'middle'}); });
+  yt.forEach(v => { el('line', {x1:BX.l, x2:BX.W-BX.r, y1:ys(v), y2:ys(v), class:'gl'}, svg); tx(svg, BX.l-5, ys(v)+3.5, ylog ? (v >= 1 ? String(v) : String(v)) : String(v), {'text-anchor':'end'}); });
+  el('rect', {x:BX.l, y:BX.t, width:BX.W-BX.l-BX.r, height:BX.H-BX.t-BX.b, class:'ax'}, svg);
+  tx(svg, (BX.l+BX.W-BX.r)/2, BX.H-4, xl, {'text-anchor':'middle', class:'ttl'});
+  tx(svg, 11, (BX.t+BX.H-BX.b)/2, yl, {'text-anchor':'middle', class:'ttl', transform:`rotate(-90 11 ${(BX.t+BX.H-BX.b)/2})`});
+}
+function path(fn, ts, xs, ys){ let d = '', pen = false; ts.forEach(t => { const v = fn(t); if (!isFinite(v) || v <= 0){ pen = false; return; } d += (pen ? 'L' : 'M') + xs(t).toFixed(1) + ',' + ys(v).toFixed(1); pen = true; }); return d; }
+
+function charts(on){
+  const t1 = on ? on.t : 0.05, ts = []; for (let i = 0; i <= 240; i++) ts.push(t1*Math.pow(T0/t1, i/240));
+  /* ch1: histories, log t vs log y */
+  let s = $('ch1'); clear(s);
+  const lx0 = Math.log10(t1), lx1 = Math.log10(T0), xs = t => BX.l + (Math.log10(t)-lx0)/(lx1-lx0)*(BX.W-BX.l-BX.r);
+  const fns = [[aOf, 'var(--soft)', '5 4'], [rcOf, 'var(--cyan)', ''], [Mof, 'var(--rose)', ''], [Rof, 'var(--ink)', ''], [t => Math.sqrt(1.5)*Xof(t), 'var(--amber)', '']].concat(DM() ? [[RoptOf, 'var(--green)', ''], [RhOf, 'var(--violet)', '2 3']] : []);
+  const norm = fns.map(f => f[0](T0)); let ymin = 1;
+  fns.forEach((f, i) => ts.forEach(t => { const v = f[0](t)/norm[i]; if (v > 0 && isFinite(v)) ymin = Math.min(ymin, v); }));
+  const ly0 = Math.floor(Math.log10(ymin)), ly1 = 0.3, ys = v => BX.H-BX.b - (Math.log10(v)-ly0)/(ly1-ly0)*(BX.H-BX.t-BX.b);
+  const yt = []; for (let k = ly0; k <= 0; k++) yt.push(Math.pow(10, k));
+  const xtk = [0.1, 0.2, 0.5, 1, 2, 5, 10].filter(v => v >= t1*0.999 && v <= T0);
+  frame(s, xtk, yt, xs, ys, 'cosmic time t (Gyr, log)', 'value / today (log)', true, true);
+  el('clipPath', {id:'c1'}, s).appendChild(el('rect', {x:BX.l, y:BX.t, width:BX.W-BX.l-BX.r, height:BX.H-BX.t-BX.b}));
+  const g1 = el('g', {'clip-path':'url(#c1)'}, s);
+  fns.forEach((f, i) => el('path', {d:path(t => f[0](t)/norm[i], ts, xs, ys), fill:'none', stroke:f[1], 'stroke-width':2, 'stroke-dasharray':f[2]}, g1));
+  const tq = tOfz(Math.cbrt(OL/Om)-1); el('line', {x1:xs(tq), x2:xs(tq), y1:BX.t, y2:BX.H-BX.b, stroke:'var(--green)', 'stroke-dasharray':'2 3'}, g1);
+  tx(g1, xs(tq)-3, BX.t+11, 'Λ = matter', {'text-anchor':'end', style:'fill:var(--green)'});
+  if (layerOn()){ const n0 = Mof(T0), H_ = HIST, pick = (arr) => { let d = '', pen = false; H_.ts.forEach((t, i) => { if (i % 6) return; const v = arr[i]/n0; if (!(v > 0)){ pen = false; return; } d += (pen ? 'L' : 'M') + xs(t).toFixed(1) + ',' + ys(v).toFixed(1); pen = true; }); return d; };
+    el('path', {d:pick(H_.Mc), fill:'none', stroke:'#d94fbf', 'stroke-width':2}, g1);
+    el('path', {d:pick(H_.Md), fill:'none', stroke:'var(--green)', 'stroke-width':2}, g1);
+    H_.resets.forEach(r => el('line', {x1:xs(r.t), x2:xs(r.t), y1:BX.H-BX.b-14, y2:BX.H-BX.b, stroke:'#d94fbf', 'stroke-width':2}, g1)); }
+  el('line', {x1:xs(S.t), x2:xs(S.t), y1:BX.t, y2:BX.H-BX.b, stroke:'var(--amber)', 'stroke-width':1.5}, g1);
+
+  /* ch2: rotation curve */
+  s = $('ch2'); clear(s);
+  const Rt = Rof(T0), xmax = Math.max(15*Rof(S.t), 12*Rt, 10);
+  const epochs = [0.5, 1, 2, 4, 8, T0].filter(e => e >= t1);
+  let vmax = 0; epochs.concat([S.t]).forEach(e => { for (let i = 1; i <= 60; i++){ const v = vCL(xmax*i/60, e); if (isFinite(v)) vmax = Math.max(vmax, v); } });
+  vmax = vmax*1.12 || 100;
+  const xr = r => BX.l + r/xmax*(BX.W-BX.l-BX.r), yr = v => BX.H-BX.b - v/vmax*(BX.H-BX.t-BX.b);
+  const tick = (mx, n) => { const st0 = mx/n, p = Math.pow(10, Math.floor(Math.log10(st0))), st = [1,2,2.5,5,10].map(m=>m*p).find(x=>x>=st0); const o = []; for (let v = 0; v <= mx+1e-9; v += st) o.push(+v.toFixed(4)); return o; };
+  frame(s, tick(xmax, 5), tick(vmax, 5), xr, yr, 'radius r (kpc)', 'v (km/s)');
+  el('clipPath', {id:'c2'}, s).appendChild(el('rect', {x:BX.l, y:BX.t, width:BX.W-BX.l-BX.r, height:BX.H-BX.t-BX.b}));
+  const g2 = el('g', {'clip-path':'url(#c2)'}, s); const rs = []; for (let i = 0; i <= 200; i++) rs.push(xmax*i/200);
+  epochs.forEach(e => { el('path', {d:path(r => vCL(r, e), rs, xr, yr), fill:'none', stroke:'var(--soft)', 'stroke-opacity':.45, 'stroke-width':1.3}, g2); const rE = xmax*0.97, vE = vCL(rE, e); if (isFinite(vE) && [0.5,1,2,T0].includes(e)) tx(g2, xr(rE)-2, yr(vE)-4, e === T0 ? 'now' : e + ' Gyr', {'text-anchor':'end', style:'font-size:9.5px'}); });
+  el('path', {d:path(r => vCL(r, S.t), rs, xr, yr), fill:'none', stroke:'var(--amber)', 'stroke-width':2.6}, g2);
+  if (layerOn()){ const st = stateAt(S.t), rs2 = []; for (let i = 0; i <= 300; i++) rs2.push(xmax*i/300);
+    if (st.resets.some(r => r.w > 0.02)) el('path', {d:path(r => r <= st.R ? vCore(r, st, S.t) : NaN, rs2, xr, yr), fill:'none', stroke:'#d94fbf', 'stroke-width':1.3, 'stroke-dasharray':'3 3', 'stroke-opacity':.7}, g2);
+    el('path', {d:path(r => vBlend(r, st, S.t), rs2, xr, yr), fill:'none', stroke:'#d94fbf', 'stroke-width':2.4}, g2);
+    st.resets.forEach(r => { if (r.Rnew < xmax && r.w > 0.02) el('line', {x1:xr(r.Rnew), x2:xr(r.Rnew), y1:BX.t, y2:BX.H-BX.b, stroke:'#d94fbf', 'stroke-width':1, 'stroke-opacity':(0.6*r.w).toFixed(3)}, g2); });
+    if (st.R < xmax){ el('line', {x1:xr(st.R), x2:xr(st.R), y1:BX.t, y2:BX.H-BX.b, stroke:'#c99a1e', 'stroke-width':1.4}, g2); tx(g2, xr(st.R)+3, BX.t+33, 'core R', {style:'fill:#c99a1e'}); } }
+  const rcN = rcOf(S.t); if (rcN < xmax) el('line', {x1:xr(rcN), x2:xr(rcN), y1:BX.t, y2:BX.H-BX.b, stroke:'var(--cyan)', 'stroke-dasharray':'2 3'}, g2);
+  const RoN = RoptOf(S.t); if (DM() && RoN < xmax){ el('line', {x1:xr(RoN), x2:xr(RoN), y1:BX.t, y2:BX.H-BX.b, stroke:'var(--green)', 'stroke-width':1.6}, g2); tx(g2, xr(RoN)+3, BX.t+22, 'R_opt', {style:'fill:var(--green)'}); }
+  const RN = Rof(S.t); el('line', {x1:xr(RN), x2:xr(RN), y1:BX.t, y2:BX.H-BX.b, stroke:'var(--ink)', 'stroke-opacity':.4, 'stroke-dasharray':'2 3'}, g2); tx(g2, xr(RN)+3, BX.t+11, 'R', {});
+
+  /* ch3: r_c / a, normalised at onset */
+  s = $('ch3'); clear(s);
+  const M0 = Math.pow(10, +$('M0').value);
+  const rcFix = t => Math.pow(2*G*M0/Math.pow(HOf(t), 2), 1/3);
+  const q1 = t => rcOf(t)/aOf(t), q2 = t => rcFix(t)/aOf(t), n1 = q1(t1), n2 = q2(t1);
+  let ymx = 0, ymn = 1; ts.forEach(t => { [q1(t)/n1, q2(t)/n2].forEach(v => { ymx = Math.max(ymx, v); ymn = Math.min(ymn, v); }); });
+  const ylo = Math.min(0.5, ymn*0.9), yhi = Math.max(1.2, ymx*1.08);
+  const ly2 = v => BX.H-BX.b - (Math.log10(v)-Math.log10(ylo))/(Math.log10(yhi)-Math.log10(ylo))*(BX.H-BX.t-BX.b);
+  const yt3 = [0.5, 0.7, 1, 2, 5, 10, 20, 50, 100].filter(v => v >= ylo && v <= yhi);
+  frame(s, xtk, yt3, xs, ly2, 'cosmic time t (Gyr, log)', 'r_c / a  (onset = 1)', true, true);
+  el('clipPath', {id:'c3'}, s).appendChild(el('rect', {x:BX.l, y:BX.t, width:BX.W-BX.l-BX.r, height:BX.H-BX.t-BX.b}));
+  const g3 = el('g', {'clip-path':'url(#c3)'}, s);
+  el('line', {x1:BX.l, x2:BX.W-BX.r, y1:ly2(1), y2:ly2(1), stroke:'var(--soft)', 'stroke-opacity':.6}, g3);
+  el('path', {d:path(t => q2(t)/n2, ts, xs, ly2), fill:'none', stroke:'var(--cyan)', 'stroke-width':2, 'stroke-dasharray':'6 4'}, g3);
+  el('path', {d:path(t => q1(t)/n1, ts, xs, ly2), fill:'none', stroke:'var(--cyan)', 'stroke-width':2.4}, g3);
+  el('line', {x1:xs(S.t), x2:xs(S.t), y1:BX.t, y2:BX.H-BX.b, stroke:'var(--amber)', 'stroke-width':1.5}, g3);
+}
+
+/* ---------- state, readouts ---------- */
+let ON = null;
+function tFromSlider(){ const t1 = ON ? ON.t : 0.05, u = +$('tSl').value/1000; return t1*Math.pow(T0/t1, u); }
+function sliderFromT(t){ const t1 = ON ? ON.t : 0.05; $('tSl').value = Math.round(1000*Math.log(t/t1)/Math.log(T0/t1)); }
+function readouts(){
+  const t = S.t, z = zOf(t), M = Mof(t), R = Rof(t), rc = rcOf(t), H = HOf(t), X = Xof(t), vL = Math.sqrt(1.5)*X;
+  $('tLab').textContent = `${fmtT(t)} · z = ${fmtZ(z)}`;
+  $('M0Lab').textContent = fmtM(Math.pow(10, +$('M0').value)) + ' M☉';
+  $('R0Lab').textContent = Math.pow(10, +$('R0').value).toFixed(2) + ' kpc';
+  const m = $('grow').value; $('gamLab').textContent = m === 'wec' ? 'α = ' + (+$('gam').value).toFixed(2) : (+$('gam').value).toFixed(2);
+  $('betLab').textContent = (+$('bet').value).toFixed(2);
+  $('gam').disabled = (m === 'pow' || m === 'fix'); $('bet').disabled = (m !== 'mcb');
+  $('vrBox').hidden = !DM(); $('fdLab').textContent = (+$('fd').value).toFixed(2); $('kkLab').textContent = (+$('kk').value).toFixed(1); $('epsLab').textContent = (+$('eps').value).toFixed(3); $('nintLab').textContent = NINT().toFixed(0) + ' orbits'; $('vrLab').textContent = (+$('vr').value).toFixed(2); $('MminLab').textContent = fmtM(Math.pow(10, +$('Mmin').value)) + ' M☉'; $('tstLab').textContent = `${fmtT(+$('tst').value)} · z = ${fmtZ(zOf(+$('tst').value))}`;
+  $('hud').innerHTML = `t = <b>${fmtT(t)}</b>  z = ${fmtZ(z)}  a = ${aOf(t).toFixed(3)}<br>H = ${(H*1000).toFixed(0)} km/s/Mpc  ·  M = ${fmtM(M)} M☉`;
+  $('kp').innerHTML = [['Mass M', fmtM(M) + ' M☉'], ['Core R', R.toFixed(2) + ' kpc'], ['Critical r<sub>c</sub>', rc.toFixed(1) + ' kpc'],
+    ['Plateau v<sub>L</sub>', (X > 0 ? vL.toFixed(0) : '—') + ' km/s'], ['r<sub>c</sub> / R', (rc/R).toFixed(0)], ['H(t)/H₀', (H/hK).toFixed(1)]].filter(k => !(layerOn() && (k[0].startsWith('r<sub>c</sub> / R') || k[0].startsWith('H(t)') || k[0] === 'Core R')))
+    .concat(layerOn() ? (() => { const st = stateAt(t), Xa = Xc(st, t); return [['Core mass M<sub>core</sub>', fmtM(st.Mc) + ' M☉'], ['Disc mass M<sub>disc</sub>', (st.Md < 1e3 ? '0' : fmtM(st.Md)) + ' M☉'], ['M<sub>disc</sub>/M<sub>core</sub> (reset at k)', (st.Md/st.Mc).toFixed(2) + ' / ' + (+$('kk').value).toFixed(1)],
+      ['Active core R', st.R.toFixed(2) + ' kpc'], ['Core plateau v<sub>L</sub>', (Xa > 0 ? (Math.sqrt(1.5)*Xa).toFixed(0) : '—') + ' km/s'], ['GM<sub>core</sub>/R² ÷ cH(t)', st.q.toFixed(3)], ['Earlier stages still visible', st.nVis + ' of ' + st.resets.length + (st.nVis ? ' · nested look' : ' · single-L look')], ['Orbits since last reset', st.resets.length ? st.resets[st.resets.length-1].N.toFixed(0) : '—'], ['Reset regime (threshold k/(1+k))', regime()]]; })() : [])
+    .concat(DM() ? [['Optical edge R<sub>opt</sub>', RoptOf(t).toFixed(1) + ' kpc'], [(S.hmode === '200' ? 'R<sub>200c</sub>' : 'R<sub>vir</sub>') + ' (DM edge)', RhOf(t).toFixed(0) + ' kpc'], ['Halo mass', fmtM(Mhof(t)) + ' M☉']] : [])
+    .map(k => `<div class="kpi"><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  let note;
+  if (!ON) note = '<b>No onset:</b> with these settings the galaxy cannot exist even today (R ≥ r<sub>c</sub> or M below the minimum).';
+  else {
+    const why = {mass:'the mass first reaches the minimum galaxy mass', rc:'the core radius first fits inside r<sub>c</sub>', zmax:'the chosen start time t<sub>start</sub> is reached'}[ON.why];
+    note = `<b>Onset at ${fmtT(ON.t)} (z = ${fmtZ(zOf(ON.t))})</b>, when ${why}. At onset M = ${fmtM(Mof(ON.t))} M☉, ${(()=>{const p=100*Mof(ON.t)/Math.pow(10, +$('M0').value); return p>=10?p.toFixed(0):p.toPrecision(2);})()}% of today's mass, and r<sub>c</sub> = ${rcOf(ON.t).toFixed(1)} kpc.`;
+    note += t < tOfz(Math.cbrt(OL/Om)-1) ? ' Matter era: r<sub>c</sub> grows as a(t)·M<sup>1/3</sup>.' : ' Λ era: H levels off, so r<sub>c</sub> now grows only through M<sup>1/3</sup>.';
+  }
+  if (layerOn()){ const st = stateAt(t); note += st.resets.length ? ` <b>${st.resets.length} reset${st.resets.length > 1 ? 's' : ''} so far</b> (last at ${fmtT(st.resets[st.resets.length-1].t)}, z = ${fmtZ(zOf(st.resets[st.resets.length-1].t))}); the active core is R = ${st.R.toFixed(2)} kpc.` : ` No reset yet; the core R = ${st.R.toFixed(2)} kpc set at onset still holds.`;
+    note += st.next ? ` Next reset at ${fmtT(st.next.t)} (z = ${fmtZ(zOf(st.next.t))}).` : ' No further reset before today.'; note += st.resets.length ? ` After N<sub>int</sub> = ${NINT().toFixed(0)} orbits a fossil stage fades to 1/e; ${st.nVis ? st.nVis + ' earlier stage' + (st.nVis > 1 ? 's are' : ' is') + ' still distinguishable, so the curve looks nested inside R.' : 'all earlier stages have merged, so the galaxy looks single-L.'}` : ''; note += ` Core acceleration at R: ${st.q.toFixed(3)}·cH(t) (set to ε = ${(+$('eps').value).toFixed(3)} at the last reset; it rises as M<sub>core</sub> grows and H falls).`; }
+  $('note').innerHTML = note;
+}
+function update(keepT){
+  setHalo(); ON = onset();
+  simulate();
+  if (ON && S.t < ON.t) S.t = ON.t;
+  if (!keepT) sliderFromT(S.t);
+  readouts(); drawGalaxy(S.t, ON); charts(ON);
+}
+$('tSl').addEventListener('input', () => { S.t = tFromSlider(); stop(); update(true); });
+['M0','R0','gam','bet','Mmin','tst','grow','vr'].forEach(id => $(id).addEventListener('input', () => {
+  if (id === 'grow'){ const m = $('grow').value; if (m === 'wec') $('gam').value = 0.6; if (m === 'mcb') { $('gam').value = 0.69; $('bet').value = 0.10; } }
+  update(false);
+}));
+$('segH').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { S.hmode = b.dataset.k; $('segH').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); update(true); }));
+$('segR').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { S.rmode = b.dataset.k; $('segR').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); update(false); }));
+['fd','kk','eps','nint','phys'].forEach(id => $(id).addEventListener('input', () => update(true)));
+$('nestOn').addEventListener('change', () => { document.querySelectorAll('.nst').forEach(e => e.hidden = !NEST()); update(true); });
+$('dmOn').addEventListener('change', () => { document.querySelectorAll('.dmc').forEach(e => e.hidden = !DM()); update(true); });
+['logr','como'].forEach(id => $(id).addEventListener('change', () => drawGalaxy(S.t, ON)));
+$('toOn').addEventListener('click', () => { stop(); if (ON) S.t = ON.t; update(false); });
+$('toNow').addEventListener('click', () => { stop(); S.t = T0; update(false); });
+let raf = null, last = 0;
+function stop(){ S.playing = false; $('play').textContent = 'Play from onset'; if (raf) cancelAnimationFrame(raf); raf = null; }
+function step(ts){
+  if (!S.playing) return;
+  const dt = last ? (ts - last)/1000 : 0; last = ts;
+  let u = +$('tSl').value + dt*90;                       // ~11 s from onset to today on a log-time axis
+  if (u >= 1000){ u = 1000; S.t = T0; sliderFromT(T0); update(true); stop(); return; }
+  $('tSl').value = u; S.t = tFromSlider(); update(true);
+  raf = requestAnimationFrame(step);
+}
+$('play').addEventListener('click', () => {
+  if (S.playing){ stop(); return; }
+  if (ON) S.t = ON.t; sliderFromT(S.t); S.playing = true; last = 0; $('play').textContent = 'Pause';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){ S.t = T0; update(false); stop(); return; }
+  raf = requestAnimationFrame(step);
+});
+S.t = 0.001; update(false);
+})();
+</script>
+</body></html>
