@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CL Galaxy Through Cosmic Time</title>
-<meta name="description" content="A single constant-Lagrangian galaxy grown from its earliest possible onset to today in flat ΛCDM: mass inflow history, the critical radius r_c tracking a(t), and the rotation curve and spiral at every epoch.">
+<title>CL Galaxy Growth with Core Resets</title>
+<meta name="description" content="A constant-Lagrangian galaxy grown from onset to today in flat ΛCDM, with a core + disc layer: core resets sized by GM/R² = ε·cH(t), fossil stages that fade over N_int orbits, and a readout of nested or single-L appearance.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
 <style>
@@ -76,8 +76,8 @@ svg .ttl{font:11.5px var(--sans);fill:var(--soft)}
 </head><body>
 <div class="wrap">
 <header>
-  <h1>CL Galaxy Through Cosmic Time</h1>
-  <p class="lede">One constant-Lagrangian galaxy, grown from the earliest moment it can exist to today in a flat ΛCDM background. The CL mass M grows by a standard cosmological inflow (mass-accretion) history, H(t) and a(t) follow ΛCDM, and the critical radius r<sub>c</sub> = (2GM/H²)<sup>1/3</sup>, the radius where the radial river stalls, opens up with the expansion. Press play or drag the time slider.</p>
+  <h1>CL Galaxy Growth with Core Resets</h1>
+  <p class="lede">One constant-Lagrangian galaxy, grown from the earliest moment it can exist to today in a flat ΛCDM background. The CL mass M grows by a standard cosmological inflow (mass-accretion) history, H(t) and a(t) follow ΛCDM, and the critical radius r<sub>c</sub> = (2GM/H²)<sup>1/3</sup>, the radius where the radial river stalls, opens up with the expansion. Press play or drag the time slider. This page adds an exploratory foreground to the <a href="CL_Galaxy_Through_Cosmic_Time.html" style="color:var(--cyan)">baseline model</a>: a fixed core collects part of the inflow, a disc builds up outside it, and when the disc reaches k times the core mass the core resets. Earlier stages remain as fossil rings that merge over N<sub>int</sub> orbits.</p>
 </header>
 
 <div class="grid">
@@ -163,9 +163,9 @@ svg .ttl{font:11.5px var(--sans);fill:var(--soft)}
       <li><span class="tag">calibrated</span> Four parameters of the core + disc layer: the disc capture fraction f<sub>d</sub> (0.75), the reset threshold k (2), the embedding factor ε (0.02, from the BTFR zero point) and the integration time N<sub>int</sub> (30 orbits, a plausible range is 20–100; not calibrated). The size law itself, GM/R² = ε·cH(t), is your embedding condition; only its factor is calibrated.</li>
       <li><span class="tag">assumed</span> The core radius R follows one of three simple histories; none is derived from the CL theory yet.</li>
       <li><span class="tag">derived</span> r<sub>c</sub>(t), v<sub>L</sub>(t), the rotation curve and the spiral at each epoch follow from M(t), R(t) and H(t) with no further freedom.</li>
-      <li><span class="tag">not included</span> The dynamical foreground (bars, rings, mergers, virial zones) and nested Lagrangians; this is the single-L kinematic background only.</li>
+      <li><span class="tag">not included</span> Bars, mergers, virial zones and the self-gravity of the disc. The core + disc layer is a one-way kinematic foreground on the clean CL background, and the angular momentum that merging fossil stages must lose is not tracked.</li>
     </ul>
-    <p class="cap">E.P.J. de Haas, constant-Lagrangian galaxy model. Part of <a href="https://haas2u-ai.github.io/bq-galaxy-models/" style="color:var(--cyan)">bq-galaxy-models</a>.</p>
+    <p class="cap">E.P.J. de Haas, constant-Lagrangian galaxy model. Part of <a href="https://haas2u-ai.github.io/bq-galaxy-models/" style="color:var(--cyan)">bq-galaxy-models</a>; see all <a href="../models.html#growth" style="color:var(--cyan)">galaxy-growth models</a>.</p>
   </section>
 </div>
 </div>
