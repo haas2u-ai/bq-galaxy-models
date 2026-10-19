@@ -72,6 +72,7 @@ footer li{margin-bottom:4px}
 
 @media (max-width:860px){.hero{grid-template-columns:1fr} .door,.door:nth-child(even){grid-template-columns:1fr} .door:nth-child(even) .art{order:0} .door .art{min-height:190px}}
 .home{margin:0 0 16px;font-size:14.5px}.home a{color:var(--cyan);text-decoration:none}.home a:hover{text-decoration:underline}.home a:focus-visible{outline:2px solid currentColor;outline-offset:2px}.home .sep{color:var(--soft);margin:0 8px}
+.visits{margin:10px 0 0;font-size:13px;color:var(--soft)}
 </style>
 </head>
 <body>
@@ -214,6 +215,23 @@ footer li{margin-bottom:4px}
       </ul>
     </div>
   </footer>
+  <p class="visits" id="visits" hidden></p>
 </main>
+
+<!-- Visitor counter: GoatCounter (https://haas2u.goatcounter.com), no cookies. Shows nothing if it cannot be reached. -->
+<script>
+(function(){
+  var GC = 'haas2u';
+  var s = document.createElement('script');
+  s.async = true; s.src = '//gc.zgo.at/count.js';
+  s.setAttribute('data-goatcounter', 'https://' + GC + '.goatcounter.com/count');
+  document.body.appendChild(s);
+  fetch('https://' + GC + '.goatcounter.com/counter/' + encodeURIComponent(location.pathname) + '.json')
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){ if (!d) return; var el = document.getElementById('visits');
+      el.textContent = d.count + ' visitors to this page · counted by GoatCounter, no cookies'; el.hidden = false; })
+    .catch(function(){});
+})();
+</script>
 </body>
 </html>
