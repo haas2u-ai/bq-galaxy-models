@@ -1,0 +1,373 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CL Vacuum Flow</title>
+<meta name="description" content="A rotating bulge drags space; from the border outward three continuations are compared: the constant-Lagrangian flow (Bernoulli), GR Lense-Thirring frame dragging, and a Kepler-like rotation, tested by Bernoulli, Rayleigh stability and GR's vacuum momentum constraint. The argument rests on one postulate: the vacuum is an ideal, barotropic, non-dissipative flow.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* Layout: chooser on the left, channel readout on the right (stacked on phones); numerical matrix check and notes below. Same family as the BQ-Pauli table page. */
+:root{
+  --bg:#f5f6fa;--surface:#ffffff;--edge:#d6dce8;--ink:#141a28;--soft:#55607a;
+  --st:#b8620f;--st-bg:rgba(184,98,15,.09);      /* space-time basis T̂, K̂ */
+  --sn:#0f7fb0;--sn-bg:rgba(15,127,176,.09);     /* spin-norm basis 1̂, σ̂ */
+  --sel:#5b4fd6;--good:#2f8a4f;--bad:#b23a3a;
+  --serif:"Source Serif 4",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#05070d;--surface:#0d1220;--edge:#222c42;--ink:#e7ebf3;--soft:#97a2b9;
+  --st:#f2a24a;--st-bg:rgba(242,162,74,.11);--sn:#48dbfb;--sn-bg:rgba(72,219,251,.09);
+  --sel:#a29bfe;--good:#5fd38a;--bad:#ff7b7b;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#05070d;--surface:#0d1220;--edge:#222c42;--ink:#e7ebf3;--soft:#97a2b9;
+  --st:#f2a24a;--st-bg:rgba(242,162,74,.11);--sn:#48dbfb;--sn-bg:rgba(72,219,251,.09);
+  --sel:#a29bfe;--good:#5fd38a;--bad:#ff7b7b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font:600 clamp(24px,3.4vw,34px)/1.15 var(--serif);margin:0 0 6px;text-wrap:balance}
+h2{font:600 18px/1.3 var(--serif);margin:0 0 10px;text-wrap:balance}
+h3{font:600 12px/1.3 var(--sans);margin:0 0 8px;color:var(--soft);letter-spacing:.06em;text-transform:uppercase}
+.lede{color:var(--soft);max-width:82ch;margin:0 0 20px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:18px;align-items:start}
+@media (max-width:960px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--edge);border-radius:12px;padding:16px;min-width:0}
+select,button,input{font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:8px;padding:5px 8px}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+.pick{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 12px;align-items:center}
+.pick label{font:600 20px var(--serif)}
+.pick select{width:100%}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.qs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.qs button{font-size:12.5px;padding:4px 9px}
+.math{font:500 16.5px/1.9 var(--serif);overflow-x:auto}
+.math b{font-weight:700}
+.vec{border:1px solid var(--edge);border-radius:10px;padding:10px 12px;margin-top:12px;background:var(--bg)}
+.vec .what{font-size:12.5px;color:var(--soft);margin-bottom:2px}
+.ts{color:var(--st)}.ns{color:var(--sn)}
+.formula{font:500 16px/1.8 var(--serif);background:var(--bg);border:1px solid var(--edge);border-radius:8px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.fwith{font:13px var(--sans);color:var(--soft);white-space:normal}
+.ch{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr);gap:4px 14px;padding:12px 0;border-bottom:1px solid var(--edge)}
+.ch:last-of-type{border-bottom:none}
+.ch .nm{font:600 14px var(--sans)}
+.ch .nm small{display:block;font:400 12px var(--sans);color:var(--soft)}
+.ch .ex{font:500 16.5px/1.75 var(--serif);overflow-x:auto;min-width:0}
+.ch .ex .gen{color:var(--soft);font-size:14.5px}
+.ch .ex .res{font-weight:600}
+.ch.n .nm{color:var(--sn)}.ch.k .nm{color:var(--st)}.ch.s .nm{color:var(--sn)}
+@media (max-width:560px){.ch{grid-template-columns:minmax(0,1fr)}}
+.total{font:600 17px/1.8 var(--serif);border:1.5px solid var(--sel);border-radius:10px;padding:10px 12px;margin-top:10px;overflow-x:auto}
+.interp{margin-top:12px;font-size:14.5px;color:var(--ink);background:var(--bg);border:1px dashed var(--edge);border-radius:10px;padding:10px 12px}
+.interp .src{display:block;font-size:12.5px;color:var(--soft);margin-top:4px}
+.note{font-size:14px;color:var(--soft);max-width:74ch;margin:8px 0 0}
+.note b{color:var(--ink)}
+/* numeric check */
+.numgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+@media (max-width:900px){.numgrid{grid-template-columns:minmax(0,1fr)}}
+.inrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.inrow label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--soft);min-width:0}
+.inrow input{width:100%;font:13.5px var(--mono)}
+.mxrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;font:500 17px var(--serif);margin:10px 0;overflow-x:auto}
+.mx{display:inline-grid;grid-template-columns:auto auto;gap:2px 14px;padding:5px 11px;position:relative;font:13.5px var(--mono);font-variant-numeric:tabular-nums}
+.mx::before,.mx::after{content:"";position:absolute;top:0;bottom:0;width:7px;border:1.5px solid var(--ink)}
+.mx::before{left:0;border-right:none}.mx::after{right:0;border-left:none}
+.mx span{text-align:right;white-space:nowrap}
+.tscroll{overflow-x:auto}
+table.dc{border-collapse:collapse;font:13.5px var(--mono);font-variant-numeric:tabular-nums;width:100%}
+table.dc th,table.dc td{padding:4px 10px;border-bottom:1px solid var(--edge);text-align:right;white-space:nowrap}
+table.dc th{font:600 12px var(--sans);color:var(--soft);text-align:right}
+table.dc td:first-child,table.dc th:first-child{text-align:left;font-family:var(--serif);font-size:15px}
+.pill{display:inline-block;font:500 12.5px var(--sans);border:1px solid var(--edge);border-radius:99px;padding:2px 10px;color:var(--soft);margin-top:10px}
+.pill.ok{border-color:var(--good);color:var(--good)}.pill.no{border-color:var(--bad);color:var(--bad)}
+.notes{margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:900px){.notes{grid-template-columns:minmax(0,1fr)}}
+.notes li{font-size:14px;max-width:70ch;margin-bottom:6px}
+.notes ul{padding-left:18px;margin:6px 0}
+.cap{font-size:12.5px;color:var(--soft);margin:10px 0 0}
+a{color:var(--sn)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--soft);cursor:pointer}
+.split{margin-top:8px}
+.pill.st{border-color:var(--st);color:var(--st)}.pill.sn{border-color:var(--sn);color:var(--sn)}
+.sstep{margin:14px 0 0}
+.sstep h3{margin:0 0 6px}
+.sline{font:500 15px/1.9 var(--serif);overflow-x:auto;white-space:nowrap;padding:1px 0}
+.sline .lab{display:inline-block;min-width:5.6em;color:var(--soft)}
+.sbox{background:var(--bg);border:1px solid var(--edge);border-radius:10px;padding:8px 12px}
+.sgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.sgrid{grid-template-columns:minmax(0,1fr)}}
+.sgrid .sline{font-size:14.5px}
+.sres{font-weight:600}
+.ctlline{margin:0 0 8px}
+.numdet{margin-top:16px;border-top:1px solid var(--edge);padding-top:10px}
+.numdet summary{cursor:pointer;font:500 14px var(--sans);color:var(--soft)}
+.numgrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:900px){.numgrid.three{grid-template-columns:minmax(0,1fr)}}
+.vec .math .what{margin:0 0 4px 0}
+.kv{font-weight:700}
+.slider{margin-top:14px;display:grid;gap:6px}
+.slider label{font-size:13.5px;color:var(--soft)}.slider label b{color:var(--ink);font:500 14px var(--mono)}
+.slider input{width:100%;accent-color:var(--st)}
+.kp{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+@media (max-width:560px){.kp{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.kp div{border:1px solid var(--edge);border-radius:8px;padding:5px 7px;min-width:0}
+.kp span{display:block;font-size:11.5px;color:var(--soft)}.kp b{font:500 14px var(--mono)}
+.trc{border:1px solid var(--edge);border-left-width:3px;border-radius:10px;padding:8px 12px;margin-bottom:10px}
+.trc.st{border-left-color:var(--st)}.trc.sn{border-left-color:var(--sn)}
+.trc h3{margin:0 0 4px}.trc .ops{font:500 15px/1.8 var(--serif);overflow-x:auto}
+.numv{font:13px var(--mono);color:var(--soft)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--soft);margin-top:6px}
+.leg>span{display:inline-flex;align-items:center;gap:6px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%}
+.sw{display:inline-block;width:18px;height:0;border-top:2px solid}
+svg{display:block;width:100%;height:auto;max-width:100%}
+svg text{font:12px var(--mono);fill:var(--soft)}
+svg .ax{stroke:var(--edge);fill:none}
+svg .ttl{font:13px var(--sans);fill:var(--soft)}
+.dsteps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
+@media (max-width:960px){.dsteps{grid-template-columns:minmax(0,1fr)}}
+.dstep{border:1px solid var(--edge);border-radius:10px;padding:10px 14px;background:var(--bg);min-width:0}
+.dstep h3{margin:0 0 6px;color:var(--ink);font:600 15.5px var(--serif);letter-spacing:0;text-transform:none}
+.dstep h3 .n{display:inline-block;min-width:1.6em;color:var(--st)}
+.dl{font:500 15px/1.85 var(--serif);overflow-x:auto;white-space:nowrap}
+.dl.dwrap{white-space:normal}
+.dnum{font:13px/1.7 var(--mono);color:var(--soft);overflow-x:auto;white-space:nowrap}
+.dk{font-size:13.5px;color:var(--soft);margin:6px 0 0}
+.mxs{display:inline-grid;gap:2px 14px;padding:3px 10px;position:relative;vertical-align:middle;font:500 14px var(--serif)}
+.mxs::before,.mxs::after{content:"";position:absolute;top:0;bottom:0;width:6px;border:1.4px solid var(--ink)}
+.mxs::before{left:0;border-right:none}.mxs::after{right:0;border-left:none}
+.mxs span{text-align:center;white-space:nowrap}
+table.lm{border-collapse:collapse;font:13px var(--mono);width:100%}
+table.lm th,table.lm td{padding:3px 8px;border-bottom:1px solid var(--edge);text-align:right;white-space:nowrap}
+table.lm th{font:600 12px var(--sans);color:var(--soft)}
+table.lm td:first-child,table.lm th:first-child{text-align:left;font-family:var(--serif)}
+
+.back{display:inline-block;margin:0 0 10px;font-size:14.5px;color:var(--sn);text-decoration:none}
+.postulate{border:2px solid var(--st);background:var(--st-bg);border-radius:12px;padding:14px 18px;margin:4px 0 20px;max-width:960px}
+.ptag{font:600 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--st);margin-bottom:4px}
+.pmain{font:500 19px/1.5 var(--serif);margin:0 0 8px}.pmain b{font-weight:600}
+.psub{margin:0;color:var(--soft);font-size:15px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:18px;align-items:start}
+@media (max-width:960px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.slider{margin:0 0 10px}.slider label{display:block;font-size:14px;margin-bottom:4px}.slider label b{font:500 14px var(--mono);margin-left:6px}.slider input{width:100%}
+.kp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
+.kp div{border:1px solid var(--edge);border-radius:8px;padding:5px 7px;min-width:0}.kp span{display:block;font-size:11.5px;color:var(--soft)}.kp b{font:500 14px var(--mono)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row button[aria-pressed="true"]{background:var(--sel);color:#fff;border-color:var(--sel)}
+#play[aria-pressed="true"]{background:var(--surface);color:var(--ink);border-color:var(--edge)}
+.trc{border:1px solid var(--edge);border-left:4px solid;border-radius:10px;padding:8px 12px;margin-bottom:10px}
+.trc h3{text-transform:none;letter-spacing:0;font:600 14.5px var(--sans);margin:0 0 4px}
+.dl{font:500 15.5px/1.8 var(--serif);overflow-x:auto}
+.anims{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.anims{grid-template-columns:minmax(0,1fr)}}
+.an{margin:0;text-align:center}.an figcaption{font-size:14px;margin-bottom:4px}
+.an canvas{width:100%;max-width:360px;height:auto;aspect-ratio:1;border:1px solid var(--edge);border-radius:10px}
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.charts{grid-template-columns:minmax(0,1fr)}}
+.charts figure{margin:0;min-width:0}.charts figcaption{font-size:14px;margin-bottom:4px}
+.charts svg{width:100%;height:auto;display:block}
+svg text{font:11px var(--mono);fill:var(--soft)} svg .ttl{font:12px var(--sans)}
+svg .gr{stroke:var(--edge);stroke-opacity:.7}svg .ax{stroke:var(--soft)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:13.5px}.leg>span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:22px;border-top:2.4px solid}
+table.vt td{text-align:center}table.vt td:first-child{text-align:left}.yes{color:var(--good);font-weight:600}.no{color:var(--bad);font-weight:600}
+.notes ul{padding-left:18px;margin:4px 0}.notes li{font-size:14.5px;margin-bottom:8px}
+</style>
+</head><body>
+<div class="wrap">
+<header>
+  <a class="back" href="../models.html">← The galaxy models</a>
+  <h1>CL Vacuum Flow: Bernoulli, Rayleigh and the Boundary of a Rotating Bulge</h1>
+  <p class="lede">A rotating bulge of radius R drags space with it. At its border the flow of space must be continuous; from there outward the vacuum continues on its own terms. Three continuations of the same boundary value are compared: the constant-Lagrangian (CL) flow, GR’s vacuum frame dragging (Lense–Thirring), and a Kepler-like rotation, all carried by the same radial river v<sub>r</sub> = √(2GM/r). Only one of them keeps the boundary energy along its streamlines and stays laminar.</p>
+  <div class="postulate" role="note">
+    <div class="ptag">The postulate</div>
+    <p class="pmain">The argument rests on one postulate: <b>the vacuum behaves as an ideal, barotropic, non-dissipative flow</b>. The river and analogue-gravity picture is taken as physics rather than as an analogy.</p>
+    <p class="psub">For dissipation, matter is needed, as the source of turbulence. Inside R the bulge is matter: its flow may be rigid, may exchange and lose energy. Outside R the flow is pure vacuum: the energy it receives at the border has no way to be dissipated, so it must be carried along the streamlines.</p>
+  </div>
+</header>
+
+<div class="grid2">
+  <section class="card" aria-labelledby="h-set">
+    <h2 id="h-set">The boundary</h2>
+    <div class="slider"><label for="vR">Rotation of space at the border, v<sub>φ</sub>(R) in units √(GM/R) <b id="vRl"></b></label><input id="vR" type="range" min="0.3" max="1.6" step="0.01" value="1"></div>
+    <div class="slider"><label for="xe">Evaluation radius r/R <b id="xel"></b></label><input id="xe" type="range" min="1" max="12" step="0.05" value="3"></div>
+    <div class="kp" id="kp"></div>
+    <p class="cap">Units GM = R = 1, so velocities are in √(GM/R) and the radial river is v<sub>r</sub> = √(2/x), x = r/R. The CL papers take v<sub>φ</sub>(R) = √(GM/R) (Kepler at the border), so the Bernoulli value, the constant Lagrangian of the CL papers, is L = v<sub>r</sub>² + v<sub>φ</sub>² = 3GM/R, and the plateau speed is v<sub>L</sub> = √L. Inside R: rigid rotation of matter.</p>
+    <div class="row" role="group" aria-label="Continuations shown"><button type="button" id="bCL" aria-pressed="true">CL</button><button type="button" id="bGR" aria-pressed="true">GR (Lense–Thirring)</button><button type="button" id="bKE" aria-pressed="true">Kepler-like</button></div>
+  </section>
+  <section class="card" aria-labelledby="h-law">
+    <h2 id="h-law">Three outward laws from the same boundary value</h2>
+    <div id="laws"></div>
+  </section>
+</div>
+
+<section class="card" style="margin-top:18px" aria-labelledby="h-anim">
+  <h2 id="h-anim">The flow of space, seen from above</h2>
+  <div class="anims" id="anims"></div>
+  <div class="row" style="margin-top:8px"><button type="button" id="play" aria-pressed="true">Pause</button><span class="cap" style="margin:0">Tracers follow the space flow (inflow v<sub>r</sub>, rotation v<sub>φ</sub>); their colour is the Bernoulli value L along the streamline relative to the border: green = the border value kept, red = changed by 50% or more. Inside R the matter of the bulge rotates rigidly and is turbulent.</span></div>
+</section>
+
+<section class="card" style="margin-top:18px" aria-labelledby="h-vid">
+  <h2 id="h-vid">Motion model</h2>
+  <video controls preload="metadata" playsinline style="width:100%;max-width:960px;border-radius:10px;display:block" src="CL_Vacuum_Flow.mp4"></video>
+  <p class="cap">27 s: the postulate, the three continuations from the same border value, and the conclusion. File: <a href="CL_Vacuum_Flow.mp4">CL_Vacuum_Flow.mp4</a> · <a href="https://youtu.be/t7D2nkuFlwY" target="_blank" rel="noopener">on YouTube ↗</a> · all <a href="../videos.html">videos</a>.</p>
+</section>
+
+<section class="card" style="margin-top:18px" aria-labelledby="h-ch">
+  <h2 id="h-ch">The tests, radius by radius</h2>
+  <div class="charts">
+    <figure><figcaption><b>Rotation of space</b> v<sub>φ</sub>(r)</figcaption><svg id="c1" viewBox="0 0 420 260" role="img" aria-label="v_phi against r for the three continuations"></svg></figure>
+    <figure><figcaption><b>Bernoulli</b> L = v<sub>r</sub>² + v<sub>φ</sub>² along the streamline</figcaption><svg id="c2" viewBox="0 0 420 260" role="img" aria-label="Bernoulli value against r"></svg></figure>
+    <figure><figcaption><b>Rayleigh</b> specific angular momentum ℓ = r v<sub>φ</sub></figcaption><svg id="c3" viewBox="0 0 420 260" role="img" aria-label="Specific angular momentum against r"></svg></figure>
+    <figure><figcaption><b>GR source needed</b> (r⁴Ω′)′/(2r³), zero in GR vacuum</figcaption><svg id="c4" viewBox="0 0 420 260" role="img" aria-label="GR momentum constraint residual against r"></svg></figure>
+  </div>
+  <div class="leg" id="leg"></div>
+</section>
+
+<section class="card" style="margin-top:18px" aria-labelledby="h-ver">
+  <h2 id="h-ver">Verdict</h2>
+  <div class="tscroll"><table class="dc vt" id="verdict"></table></div>
+  <p class="note">Each criterion belongs to a different law. Bernoulli and Rayleigh are the laws of an ideal flow, and only CL passes both. The GR vacuum condition is GR’s momentum constraint for an azimuthal shift, and only Lense–Thirring passes it. Which column decides is the postulate.</p>
+</section>
+
+<div class="notes">
+  <section class="card"><h2>The argument</h2>
+    <ul>
+      <li><b>No dissipation.</b> Outside R there is no matter, so no viscosity and no turbulence source. A steady, ideal flow conserves the Bernoulli value along each streamline, and the border fixes that value: L = v<sub>r</sub>² + v<sub>φ</sub>²(R) = 2GM/R + v<sub>φ</sub>²(R).</li>
+      <li><b>The river makes it unique.</b> For purely circular flow (v<sub>r</sub> = 0) Bernoulli would hold for any v<sub>φ</sub>(r) and fix nothing. The radial river turns the streamlines into spirals that cross radii, so the border value is carried outward, and v<sub>φ</sub> = √(L − 2GM/r) is the only profile: the CL flow (exactly, cosh χ<sub>r</sub> cosh χ<sub>φ</sub> = Γ<sub>0</sub>).</li>
+      <li><b>Laminar.</b> Rayleigh’s criterion: a rotating ideal flow is stable when r v<sub>φ</sub> increases outward. CL does, toward v<sub>φ</sub> → √L; Lense–Thirring, with r v<sub>φ</sub> ∝ 1/r, does not, and read as a flow it would become turbulent.</li>
+      <li><b>Matter is different.</b> Inside R the matter can dissipate and rotate rigidly, and its Bernoulli value varies with radius. The premise applies to the vacuum outside only.</li>
+    </ul>
+  </section>
+  <section class="card"><h2>Where it departs from GR</h2>
+    <ul>
+      <li><b>GR’s outward law.</b> In river gauge the slowly rotating vacuum obeys (r⁴Ω′)′ = 0, so Ω = Ω<sub>∞</sub> + 2GJ/(c²r³): frame dragging falls off as r<sup>−3</sup>. The gravitomagnetic field outside the sources is a dipole.</li>
+      <li><b>CL in GR.</b> The CL branch makes (r⁴Ω′)′ nonzero: at first order in the rotation GR would need a mass current outside R. CL is therefore not a hidden GR vacuum; it replaces GR’s momentum constraint by Bernoulli. (At second order every differential rotation, Lense–Thirring included, also changes the energy density, −r²Ω′²/4 in this flat-slice form, which GR balances by second-order metric corrections; that term does not distinguish the branches.)</li>
+      <li><b>Why GR does not see it.</b> In GR the shift is not a fluid and its energy is not localized; Lense–Thirring is stable as geometry. The difference is the postulate, not an error on either side.</li>
+      <li><b>Caveats.</b> Slow flow; the radial river is taken unchanged by the rotation it carries (no back-reaction); the GR continuation matches Ω at R but not Ω′, which needs a surface current there.</li>
+    </ul>
+  </section>
+</div>
+<p class="cap" style="margin-top:14px">Related: the GR literature that seeks flat rotation curves from frame dragging within GR’s own equations, Cooperstock &amp; Tieu (2005) and Balasin &amp; Grumiller (2006), van Stockum-type rotating dust. The CL condition: de Haas, the CL papers and <a href="https://haas2u-ai.github.io/bq_algebra/BQ_models/BQ_CL_Killing.html">CL in the metric</a>. The motion model: <a href="CL_Vacuum_Flow.mp4">CL_Vacuum_Flow.mp4</a> (script <code>bq-video-scripts/scripts/cl_vacuum_flow_video.py</code>); exact checks in <code>CL-vacuum-flow/code/cl_vacuum_flow.py</code>. Part of <a href="../index.html">Galaxies and jets as flows of space</a>.</p>
+</div>
+
+<script>
+(function(){
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fx = (x, d) => (Math.abs(x) < 5e-13 ? 0 : +x.toFixed(d == null ? 3 : d)).toString().replace('-', '−');
+const vR = () => +$('vR').value, xe = () => +$('xe').value;
+const H0 = () => 2 + vR()*vR();
+const vr = x => Math.sqrt(2/x);
+/* the three continuations: v_phi(x) for x >= 1, rigid inside */
+const M = {
+  CL: {name:'CL', long:'CL (Bernoulli)', col:'--good', on:true, vp: x => Math.sqrt(Math.max(0, H0() - 2/x)), law:x => `v<sub>φ</sub>² = L − 2GM/r`},
+  GR: {name:'GR', long:'GR, Lense–Thirring', col:'--sel', on:true, vp: x => vR()/(x*x), law:x => `Ω = Ω(R)(R/r)³, v<sub>φ</sub> = v<sub>φ</sub>(R) R²/r²`},
+  KE: {name:'Kepler', long:'Kepler-like', col:'--sn', on:true, vp: x => vR()/Math.sqrt(x), law:x => `v<sub>φ</sub> = v<sub>φ</sub>(R) √(R/r)`}
+};
+const KEYS = ['CL', 'GR', 'KE'];
+const vpIn = x => vR()*x;                        /* rigid interior */
+const H = (k, x) => vr(x)**2 + M[k].vp(x)**2;
+const ell = (k, x) => x*M[k].vp(x);
+const Om = (k, x) => M[k].vp(x)/x;
+function resid(k, x){ const h = 1e-4*x, f = y => { const d = 1e-5*y; return y**4*(Om(k, y + d) - Om(k, y - d))/(2*d); };
+  return (f(x + h) - f(x - h))/(2*h)/(2*x**3); }
+function edens(k, x){ const d = 1e-5*x, op = (Om(k, x + d) - Om(k, x - d))/(2*d); return -x*x*op*op/4; }
+
+/* ---------- top readouts ---------- */
+function renderTop(){
+  $('vRl').textContent = fx(vR(), 2); $('xel').textContent = fx(xe(), 2);
+  const x = xe();
+  $('kp').innerHTML = [['L at the border', fx(H0())], ['v<sub>r</sub>(r)', fx(vr(x))], ['CL v<sub>φ</sub> → √L', fx(Math.sqrt(H0()))], ['CL v<sub>φ</sub>(r)', fx(M.CL.vp(x))], ['GR v<sub>φ</sub>(r)', fx(M.GR.vp(x))], ['Kepler v<sub>φ</sub>(r)', fx(M.KE.vp(x))]]
+    .map(k => `<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  KEYS.forEach(k => $('b' + (k === 'KE' ? 'KE' : k)).setAttribute('aria-pressed', M[k].on ? 'true' : 'false'));
+  const card = (k, t, body) => `<div class="trc" style="border-left-color:var(${M[k].col})"><h3 style="color:var(${M[k].col})">${t}</h3>${body}</div>`;
+  $('laws').innerHTML =
+    card('CL', 'CL: Bernoulli carries the border value', `<div class="dl">v<sub>r</sub>² + v<sub>φ</sub>² = L = 2GM/R + v<sub>φ</sub>²(R) &nbsp;⇒&nbsp; v<sub>φ</sub> = √(L − 2GM/r) → √L = v<sub>L</sub></div><p class="note">The ideal-flow law: no dissipation, so the boundary energy is kept along the spiral streamlines. At r = ${fx(x, 2)}R: L = ${fx(H('CL', x))}, the border value.</p>`)
+  + card('GR', 'GR: the vacuum momentum constraint', `<div class="dl">(r⁴Ω′)′ = 0 &nbsp;⇒&nbsp; Ω = Ω(R)(R/r)³, &nbsp;v<sub>φ</sub> ∝ r<sup>−2</sup></div><p class="note">Frame dragging of a rotating body (Lense–Thirring), continuous in Ω at R, with space at rest far away. At r = ${fx(x, 2)}R: L = ${fx(H('GR', x))}, ${fx(100*(H('GR', x) - H0())/H0(), 1)}% from the border value.</p>`)
+  + card('KE', 'Kepler-like: matter orbits imposed on space', `<div class="dl">v<sub>φ</sub> = v<sub>φ</sub>(R)√(R/r)</div><p class="note">The rotation that orbiting matter would have, carried by the same river for comparison. At r = ${fx(x, 2)}R: L = ${fx(H('KE', x))}, ${fx(100*(H('KE', x) - H0())/H0(), 1)}% from the border value.</p>`);
+}
+
+/* ---------- charts ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const sv = (tag, at, p) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (p) p.appendChild(e); return e; };
+function chart(id, f, yl, opt){
+  const s = $(id); while (s.firstChild) s.removeChild(s.firstChild);
+  const W = 420, Hh = 260, L = 52, Rm = 12, T = 12, B = 34, x0 = 0, x1 = 12;
+  const ks = KEYS.filter(k => M[k].on);
+  let ys = []; for (const k of ks) for (let n = 0; n <= 200; n++){ const x = 1 + 11*n/200; const y = f(k, x); if (isFinite(y)) ys.push(y); }
+  let y0 = opt.y0 != null ? opt.y0 : Math.min(0, ...ys), y1 = opt.y1 != null ? opt.y1 : Math.max(...ys, 1e-6);
+  if (opt.sym){ const a = Math.max(Math.abs(y0), Math.abs(y1)); y0 = -a; y1 = a; }
+  y1 += (y1 - y0)*0.06; if (opt.y0 == null && y0 < 0) y0 -= (y1 - y0)*0.04;
+  const PX = x => L + (x - x0)/(x1 - x0)*(W - L - Rm), PY = y => T + (y1 - Math.max(y0, Math.min(y1, y)))/(y1 - y0)*(Hh - T - B);
+  for (let x = 0; x <= 12; x += 2){ sv('line', {x1:PX(x), x2:PX(x), y1:T, y2:Hh - B, class:'gr'}, s); const t = sv('text', {x:PX(x), y:Hh - B + 15, 'text-anchor':'middle'}, s); t.textContent = x; }
+  const nt = 4; for (let i = 0; i <= nt; i++){ const y = y0 + (y1 - y0)*i/nt; sv('line', {x1:L, x2:W - Rm, y1:PY(y), y2:PY(y), class:'gr'}, s); const t = sv('text', {x:L - 5, y:PY(y) + 4, 'text-anchor':'end'}, s); t.textContent = fx(y, Math.abs(y1 - y0) < 2 ? 2 : 1); }
+  if (y0 < 0 && y1 > 0) sv('line', {x1:L, x2:W - Rm, y1:PY(0), y2:PY(0), class:'ax'}, s);
+  sv('rect', {x:PX(0), y:T, width:PX(1) - PX(0), height:Hh - T - B, fill:'var(--st)', 'fill-opacity':.1}, s);
+  const tb = sv('text', {x:PX(0.5), y:T + 12, 'text-anchor':'middle', style:'fill:var(--st)'}, s); tb.textContent = 'bulge';
+  sv('line', {x1:PX(xe()), x2:PX(xe()), y1:T, y2:Hh - B, stroke:'var(--ink)', 'stroke-opacity':.35}, s);
+  const xl = sv('text', {x:(L + W - Rm)/2, y:Hh - 4, 'text-anchor':'middle', class:'ttl'}, s); xl.textContent = 'r / R';
+  const yt = sv('text', {x:12, y:(T + Hh - B)/2, 'text-anchor':'middle', class:'ttl', transform:`rotate(-90 12 ${(T + Hh - B)/2})`}, s); yt.textContent = yl;
+  if (opt.ref != null){ sv('line', {x1:PX(1), x2:W - Rm, y1:PY(opt.ref), y2:PY(opt.ref), stroke:'var(--good)', 'stroke-dasharray':'4 3', 'stroke-opacity':.7}, s); }
+  for (const k of ks){
+    let d = ''; for (let n = 0; n <= 300; n++){ const x = 1 + 11*n/300, y = f(k, x); if (!isFinite(y)) continue; d += (d ? 'L' : 'M') + PX(x).toFixed(1) + ',' + PY(y).toFixed(1); }
+    sv('path', {d, fill:'none', stroke:`var(${M[k].col})`, 'stroke-width':2.2}, s);
+    if (opt.inside){ let di = ''; for (let n = 0; n <= 40; n++){ const x = n/40, y = opt.inside(x); di += (di ? 'L' : 'M') + PX(x).toFixed(1) + ',' + PY(y).toFixed(1); } sv('path', {d:di, fill:'none', stroke:'var(--st)', 'stroke-width':2}, s); }
+  }
+}
+function charts(){
+  chart('c1', (k, x) => M[k].vp(x), 'v_φ', {y0:0, inside:vpIn});
+  chart('c2', (k, x) => H(k, x), 'L', {y0:0, ref:H0()});
+  chart('c3', (k, x) => ell(k, x), 'r v_φ', {y0:0, inside:x => x*vpIn(x)});
+  chart('c4', (k, x) => resid(k, x), 'GR source', {sym:true});
+  $('leg').innerHTML = KEYS.filter(k => M[k].on).map(k => `<span><i class="sw" style="border-color:var(${M[k].col})"></i>${M[k].long}</span>`).join('')
+    + '<span><i class="sw" style="border-color:var(--st)"></i>bulge interior, rigid matter</span><span><i class="sw" style="border-color:var(--good);border-top-style:dashed"></i>border value L</span>';
+}
+function verdict(){
+  const x = xe(), ok = b => b ? '<span class="yes">✓</span>' : '<span class="no">✗</span>';
+  const bern = k => Math.abs(H(k, x) - H0()) < 1e-9, ray = k => (ell(k, x*1.001) - ell(k, x)) > 0, vac = k => Math.abs(resid(k, x)) < 1e-6*Math.max(1, Math.abs(resid('CL', x)));
+  $('verdict').innerHTML = `<thead><tr><th>continuation</th><th>Bernoulli: L kept</th><th>Rayleigh: r v<sub>φ</sub> rises</th><th>GR vacuum: (r⁴Ω′)′ = 0</th><th>v<sub>φ</sub> far away</th></tr></thead><tbody>`
+    + KEYS.map(k => `<tr><td style="color:var(${M[k].col})"><b>${M[k].long}</b></td><td>${ok(bern(k))}</td><td>${ok(ray(k))}</td><td>${ok(vac(k))}</td><td>${k === 'CL' ? '√L = ' + fx(Math.sqrt(H0())) : '→ 0'}</td></tr>`).join('') + '</tbody>';
+}
+
+/* ---------- animation: three top views ---------- */
+const AN = {};
+function setupAnim(){
+  $('anims').innerHTML = KEYS.map(k => `<figure class="an"><figcaption style="color:var(${M[k].col})"><b>${M[k].long}</b></figcaption><canvas id="cv${k}" width="360" height="360" aria-label="Top view of the ${M[k].long} flow of space around the bulge"></canvas></figure>`).join('');
+  KEYS.forEach(k => { const P = []; for (let i = 0; i < 260; i++) P.push(spawn(true)); AN[k] = {P, ang:0}; });
+}
+const XMAX = 6;
+function spawn(any){ return {x:any ? 1 + Math.random()*(XMAX - 1) : XMAX, a:Math.random()*2*Math.PI}; }
+const TURB = Array.from({length:60}, () => ({r:Math.sqrt(Math.random())*0.95, a:Math.random()*2*Math.PI, ph:Math.random()*6.28}));
+let last = 0, run = true, tt = 0;
+function hcol(rel){ const a = Math.min(1, Math.abs(rel)/0.5); return a < 0.02 ? css('--good') : mix(css('--good'), css('--bad'), a); }
+function mix(c1, c2, t){ const p = c => { c = c.replace('#', ''); return [0, 2, 4].map(i => parseInt(c.substr(i, 2), 16)); }; const a = p(c1), b = p(c2); return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v)*t)).join(',')})`; }
+function frame(ts){
+  const dt = last ? Math.min(0.05, (ts - last)/1000) : 0; last = ts;
+  if (run) tt += dt;
+  for (const k of KEYS){
+    const cv = $('cv' + k); if (!cv) continue;
+    const c = cv.getContext('2d'), W = cv.width, C = W/2, S = (W/2 - 8)/XMAX;
+    c.clearRect(0, 0, W, W); c.fillStyle = css('--surface'); c.fillRect(0, 0, W, W);
+    const st = AN[k];
+    if (run){ for (const p of st.P){ const sp = 0.9; p.x -= vr(p.x)*dt*sp; p.a += M[k].vp(Math.max(1, p.x))/p.x*dt*sp; if (p.x <= 1) Object.assign(p, spawn(false)); } st.ang += vR()*dt*0.9; }
+    c.strokeStyle = css('--edge'); c.lineWidth = 1; for (const rr of [2, 4, 6]){ c.beginPath(); c.arc(C, C, rr*S, 0, 2*Math.PI); c.stroke(); }
+    /* bulge: rigid matter with turbulence */
+    c.fillStyle = css('--st'); c.globalAlpha = 0.18; c.beginPath(); c.arc(C, C, S, 0, 2*Math.PI); c.fill(); c.globalAlpha = 1;
+    c.strokeStyle = css('--st'); c.lineWidth = 2; c.beginPath(); c.arc(C, C, S, 0, 2*Math.PI); c.stroke();
+    for (let i = 0; i < 4; i++){ const a = st.ang + i*Math.PI/2; c.beginPath(); c.moveTo(C, C); c.lineTo(C + S*0.9*Math.cos(a), C - S*0.9*Math.sin(a)); c.stroke(); }
+    c.fillStyle = css('--st');
+    for (const q of TURB){ const a = q.a + st.ang + 0.25*Math.sin(3*tt + q.ph), r = q.r + 0.05*Math.sin(5*tt + 2*q.ph); c.fillRect(C + S*r*Math.cos(a) - 1, C - S*r*Math.sin(a) - 1, 2, 2); }
+    for (const p of st.P){ const rel = (H(k, Math.max(1, p.x)) - H0())/H0(); c.fillStyle = hcol(rel); c.beginPath(); c.arc(C + S*p.x*Math.cos(p.a), C - S*p.x*Math.sin(p.a), 2, 0, 2*Math.PI); c.fill(); }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ---------- wiring ---------- */
+function render(){ renderTop(); charts(); verdict(); }
+$('vR').addEventListener('input', render); $('xe').addEventListener('input', render);
+[['bCL', 'CL'], ['bGR', 'GR'], ['bKE', 'KE']].forEach(([b, k]) => $(b).addEventListener('click', () => { M[k].on = !M[k].on; if (!KEYS.some(q => M[q].on)) M[k].on = true; render(); }));
+$('play').addEventListener('click', () => { run = !run; $('play').textContent = run ? 'Pause' : 'Play'; $('play').setAttribute('aria-pressed', run ? 'true' : 'false'); });
+setupAnim(); render(); requestAnimationFrame(frame);
+})();
+</script>
+</body></html>
