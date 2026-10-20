@@ -45,6 +45,7 @@ The four fitting videos use precomputed solver paths and profile scans. These ar
 | ESO079–G014: does Φ_BH improve the fit? | `prep_eso.py`, then `movie_eso.py` | `model_eso.py`, `data_eso.py` |
 | The M87 jet in one PG geometry | `m87movie.py` | `pgjet.py` |
 | The riverbed of space: Hubble, absorption in matter, CL spiral | `movie2.py` | `model2.py`, `riverbed.py` |
+| The vacuum flow at the bulge border: CL vs Lense–Thirring vs Kepler (Bernoulli, Rayleigh) | `cl_vacuum_flow_video.py` | self-contained (also writes the MP4 of `models/CL_Vacuum_Flow.html`) |
 
 Shared helpers: `paths.py` (folders and the quick-test switch), `lm.py` (transparent
 Levenberg–Marquardt that records each accepted step for the fitting videos).
